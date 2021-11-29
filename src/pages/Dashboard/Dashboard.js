@@ -6,8 +6,12 @@ import {SelectColumnFilter} from "../../components/Table/Filter";
 import dayjs from "dayjs";
 import Info from "../../components/Info/Info";
 import AppContext from "../../hooks/context";
+import {useDispatch} from "react-redux";
+import {Link} from 'react-router-dom'
+import {actionDeleteContract} from "../../store/actions/actionsDashboard";
 
 function Dashboard() {
+    const dispatch = useDispatch()
     const [open,setOpen] = useState(false)
     const [currentId,setCurrentId] = useState(null)
     const columns = useMemo(()=>
@@ -24,7 +28,7 @@ function Dashboard() {
             },
             {
                 Header:'Номер контракта',
-                accessor:'agreement_id'
+                accessor:'contract_id'
             },
             {
                 Header: 'Дата',
@@ -36,7 +40,7 @@ function Dashboard() {
                     style: "currency",
                     currency: "RUB",
                     minimumFractionDigits:2
-                }).format(d.sum2)
+                }).format(d.sum)
             },
             {
                 Header:"Дата заключения",
@@ -48,7 +52,7 @@ function Dashboard() {
             },
             {
                 Header:"Описание",
-                accessor: "description"
+                accessor: (d)=>d.description
             },
             {
                 Header:"Отделение",
@@ -65,12 +69,26 @@ function Dashboard() {
                 accessor: "type",
                 Filter:SelectColumnFilter,
                 filter:'equals'
+            },
+            {
+                Header:'Действия',
+                accessor:"action",
+                Filter:()=>null,
+                Cell:({row})=>(
+                         <>
+                         <button onClick={()=>onDeleteContract(row.original)}>Удалить</button>
+                         <Link to={`/edit/${row.original.contract_id}`}>Редактировать</Link>
+                         </>
+                )
             }
 
         ],[open])
     const onShowInfo=(row)=>{
         setOpen(true)
-        setCurrentId(row.id)
+        setCurrentId(row.original.contract_id)
+    }
+    const onDeleteContract=(current)=>{
+        dispatch(actionDeleteContract(current.contract_id))
     }
     // const SubRowsAsync=({row,rowProps,visibleColumns})=>{
     //     const {id} = row;

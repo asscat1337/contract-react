@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom";
 import {useTable} from 'react-table'
 import action2 from "../../store/actions/action2";
 import {useMemo,useEffect} from 'react'
@@ -7,12 +8,12 @@ import styles from './SubRows.module.scss'
 
 function SubRows({current,setModal,testCurrentId}) {
     const dispatch = useDispatch();
-    const data = useSelector(state=>state.dashboard.data[Number(current)])
-    const loading = useSelector(state=>state.dashboard.loading)
-    const {children} = data
+    const data = useSelector(state=>state.dashboard.data.find(item=>item.contract_id === current));
+    const loading = useSelector(state=>state.dashboard.loading);
+    const {children} = data;
     useEffect(()=>{
         if(!children.length){
-            dispatch(action2({id:data.agreement_id}))
+            dispatch(action2(current))
        }
     },[data])
     const onShowModal=(row)=>{
@@ -45,7 +46,12 @@ function SubRows({current,setModal,testCurrentId}) {
             Header:()=>null,
             accessor: 'modal',
             Cell:({row})=>(
-                <a href="#" onClick={()=>onShowModal(row)}>Показать пациентов</a>
+                <>
+                    <a href="#" onClick={()=>onShowModal(row)}>Показать пациентов</a>
+                    <Link to={`/patient/${row.original.services_id}`}>
+                        Добавить пациента
+                    </Link>
+                </>
             )
         }
 

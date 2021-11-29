@@ -1,0 +1,30 @@
+.error{
+  border:1px solid red;
+}
+.formContent{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+.form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  input{
+    width: 54%;
+    padding: 10px 0;
+    margin: 3px;
+  }
+  select{
+    width: 54%;
+    margin: 3px;
+    padding: 15px 0 ;
+  }
+}
+.select{
+  width: 54%;
+  margin: 3px;
+  padding: 15px 0 ;
+}

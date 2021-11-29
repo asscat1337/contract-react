@@ -1,4 +1,8 @@
-import {LOAD_PATIENT,SHOW_PATIENT} from "../types";
+import {LOAD_PATIENT,
+    SHOW_PATIENT,
+    ERROR_PATIENT,
+    ADD_PATIENT
+} from "../types";
 
 const initialState = {
     patient:[],
@@ -20,7 +24,19 @@ function patientReducer(state = initialState,action){
                 ...state,
                 loading: false,
                 patient:[...state.patient,action.payload].flat()
-            }
+            };
+            case ERROR_PATIENT :
+                return {
+                    ...state,
+                    loading:true,
+                    error:action.payload
+                };
+            case ADD_PATIENT :
+                return {
+                    loading:false,
+                    error:'',
+                    patient: [...state.patient,action.payload]
+                }
             default: return state
         }
 }

@@ -1,8 +1,7 @@
 import {useEffect} from 'react'
-import dayjs from "dayjs";
 import styles from './Modal.module.scss'
 
-function Modal({onClose,title='',footer = '',data}){
+function Modal({onClose,title='',footer = '',children}){
   const closeModal =()=>{
           onClose(false)
   }
@@ -29,14 +28,7 @@ function Modal({onClose,title='',footer = '',data}){
         </div>
          <div className={styles.modalBody}>
                 <div className={styles.content}>
-                    {data.length ?
-                    data.map(item=>(
-                        <div key={item.patient_id}>
-                            <div>{item.fio}</div>
-                            <div>{dayjs(item.birthday).format("DD.MM.YYYY")}</div>
-                        </div>
-                    )) : (<div>Нет данных</div>)
-                    }
+                    {children}
                 </div>
         </div>
       {footer && <div className={styles.modalFooter}> {footer}</div>}

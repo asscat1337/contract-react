@@ -9,7 +9,7 @@ function Header() {
             <div className={style.bar}>
                 <input type="text" className={style.filter} placeholder="Поиск..."/>
                 <button className={style.add}>
-                    <Link to="/login" className={style.defaultLink}> Зарегистрировать</Link>
+                    <Link to="/add" className={style.defaultLink}> Зарегистрировать</Link>
                 </button>
             </div>
         </div>

@@ -5,75 +5,28 @@ const connection = mysql.createConnection(config).promise();
 const fs = require('fs')
 const csvParser = require('csv-parser')
 const router = Router();
+const dashboardController = require('../controller/dashboardController');
 
-router.get('/',async(req,res)=>{
-    // if(!req.session.isAuth){
-    //     return res.redirect('/')
-    // }else{
-        ///попроавить
-        // if(req.session.branchId){
-        //     await connection.query(`SELECT * from contract WHERE branch = '${req.session.branchId}'`)
-        //     .then(async([rows,fields])=>{
-        //         console.log(rows)
-        //                 await connection.query('SELECT * from services')
-        //                     .then(async([rows2])=>{
-        //                         await connection.query('SELECT * from branch')
-        //                         .then(([rows3])=>{
-        //                             res.render('dashboard',{
-        //                                 js:['lib/burger.js','dashboard.js'],
-        //                                 css:['dashboard.css'],
-        //                                 dog:rows,
-        //                                 sum:rows2,
-        //                                 isActive:true,
-        //                                 isAuth:req.session.isAuth,
-        //                                 rolesId:req.session.rolesId,
-        //                                 user:req.session.username,
-        //                                 fio:req.session.fio,
-        //                                 branch:rows3
-        //                             })
-        //                         })
-        //                     })
-        //     })
-        // }else{
-            await connection.query(`SELECT * from contract`)
-            .then(async([rows,fields])=>{
-                        await connection.query('SELECT * from services')
-                            .then(async([rows2])=>{
-                                await connection.query('SELECT * from branch')
-                                .then(([rows3])=>{
-                                    const mappedArr = rows.map((row,i)=>{
-                                        return {
-                                            ...row,
-                                            children:[]
-                                        }
-                                    })
-                                    res.json(mappedArr)
-                                })
-                        })
-      })
-    //         ///
-    //     }
-    // }
-});
-router.get('/add-dog',async(req,res)=>{
-    const results = []
-    fs.createReadStream('./router/hospitals.csv')
+router.get('/',dashboardController.dataContract);
+router.get('/get-branch',async (req,res)=>{
+    await connection.query('SELECT * from branch')
+        .then(([rows])=>{
+            const mappedDepartment = rows.map(row=>{
+                return {
+                    label:row.description
+                }
+            })
+            return res.json(mappedDepartment)
+        })
+})
+router.get('/add-dog',async (req,res)=>{
+    const results = [];
+    await fs.createReadStream('./router/hospitals.csv')
         .pipe(csvParser())
         .on('data',(data)=>results.push(data))
-    await connection.query('SELECT * from branch')
-    .then(([rows])=>{
-        res.render('add-dog',{
-            rolesId:req.session.rolesId,
-            isActive:true,
-            isAuth:req.session.isAuth,
-            user:req.session.username,
-            fio:req.session.fio,
-            js:['lib/burger.js','add.js'],
-            css:['add-dog.css'],
-            branch:rows,
-            hospitals:results
+        .on('end',()=>{
+            return res.json(results)
         })
-    })
 });
 router.get('/add-service/:id',(req,res)=>{
     res.render('add-service', {
@@ -87,61 +40,12 @@ router.get('/add-service/:id',(req,res)=>{
         data:req.params.id
     })
 })
-router.post('/addService',async(req,res)=>{
-    const {name,cost,count,agreementId} = req.body;
-    console.log(req.body)
-    await connection.query(`INSERT INTO services VALUES(NULL,'${name}','${cost}','${count}','${agreementId}','${count}')`)
-        .then(([rows,fields])=>{
-            if(rows){
-              res.json({'message':'Запись добавлена'})
-            }
-        })
-})
-router.post('/addData',async(req,res)=>{
-    const {date,numberContract,validity,description,org,branch} = req.body;
-    connection.query(`INSERT into contract VALUES(NULL,'${date}','${numberContract}','${validity}','${description}','${branch}','${org}')`)
-        .then(([rows,fields])=>{
-            if(rows){
-                console.log(rows)
-                //res.redirect('/dashboard')
-            }
-        })
-});
-router.post('/findService',async(req,res)=>{
-    const {id} = req.body;
-    console.log(id)
-    await connection.query(`SELECT * from services WHERE agreement_id='${id}'`)
-        .then(([rows,fields])=>{
-            if(rows){
-                res.json(rows)
-            }
-        })
-})
-router.post('/add',async(req,res)=>{
-    const {date,sumDog,validity,description,rendering,org,branch,type} = req.body;
-    connection.query(`INSERT into contract VALUES(NULL,'${date}','${sumDog}','${validity}','${rendering}','${description}','${branch}','${org}',${type})`)
-        .then(([rows,fields])=>{
-            if(rows){
-                console.log(rows)
-                return res.redirect(`/dashboard/edit-dashboard/${rows.insertId}`)
-            }
-        })
-});
-router.post('/remove',async(req,res)=>{
-    const {id} = req.body;
-    await connection.query(`DELETE from contract WHERE agreement_id='${id}'`)
-        .then(async()=>await connection.query(`DELETE from services WHERE agreement_id='${id}'`))
-        .then(()=>res.redirect('/dashboard'))
-})
-router.post('/removeService',async(req,res)=>{
-    const {id} = req.body;
-    await connection.query(`DELETE from services WHERE services_id='${id}'`)
-        .then(([rows,fields])=>{
-            if(rows){
-                res.redirect('/dashboard')
-            }
-        })
-});
+router.post('/addService',dashboardController.addService)
+router.get('/getService/:id',dashboardController.editCurrentService)
+router.post('/findService',dashboardController.findService);
+router.post('/add',dashboardController.addContract);
+router.delete('/delete-contract',dashboardController.deleteContract);
+router.post('/delete-service',dashboardController.deleteService);
 router.post('/updateData',async(req,res)=>{
     console.log(req.body)
     async function updateData(){
@@ -249,12 +153,5 @@ router.get('/edit-dashboard/:id',async(req,res)=>{
             })
         })
 })
-router.post('/update-service',async(req,res)=>{
-    const {id,name,cost,count} = req.body;
-    await connection.query(`UPDATE services SET service_name = '${name}'
-    ,service_cost='${cost}'
-    ,service_count='${count}' WHERE services_id='${id}'`)
-        .then(res.json({'message':'Данные обновились'}))
-        .catch(e=>res.json({'error':e}))
-})
+router.post('/update-service',dashboardController.editService)
 module.exports = router

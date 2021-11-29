@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo} from 'react'
 import {useTable,useFilters,useExpanded} from 'react-table'
 import {useDispatch,useSelector} from 'react-redux'
-import action1 from "../../store/actions/action1";
+import {actionGetDashboard} from "../../store/actions/actionsDashboard";
 import {Filter,DefaultColumnFilter,SelectColumnFilter} from "./Filter";
 import style from './Table.module.scss'
 
@@ -9,7 +9,7 @@ function Table({columns,renderRowSubComponent}){
     const dispatch = useDispatch()
     const data = useSelector((state)=>state.dashboard.data)
     useEffect(()=>{
-        dispatch(action1())
+        dispatch(actionGetDashboard())
     },[])
 
 const {
