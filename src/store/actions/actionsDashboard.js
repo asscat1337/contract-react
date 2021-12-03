@@ -8,10 +8,14 @@ import {
     loadDataDashboard
 } from "../reducers/reducer";
 
-function actionGetDashboard() {
+function actionGetDashboard({page,size}) {
     return dispatch=>{
-        axios.get('http://localhost:3005/dashboard')
-            .then(({data})=>dispatch(getDataDashboard(data)))
+        dispatch(loadDataDashboard());
+        axios.get(`http://localhost:3005/dashboard?page=${page}&size=${size}`)
+            .then(({data})=>dispatch(getDataDashboard(
+                {count:Math.ceil(data.count/size),rows:data.rows}
+            )))
+            .catch(error=>dispatch(errorDashboard(error)))
     }
 }
 function actionFindService(value) {

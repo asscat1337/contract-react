@@ -16,9 +16,11 @@ const initialState = {
     editableService:[],
     loading:true,
     error:'',
+    count:null
 }
 
 function reducer(state = initialState,action){
+    console.log(action.payload)
     switch (action.type) {
         case LOAD_DATA_DASHBOARD :
             return {
@@ -28,9 +30,10 @@ function reducer(state = initialState,action){
             };
         case GET_DATA_DASHBOARD:
             return {
-                ...state,
                 loading:false,
-                data:[...state.data,...action.payload]
+                data:action.payload.rows,
+                count:action.payload.count,
+                error:''
             };
         case GET_DATA_SERVICE:
             return {

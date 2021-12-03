@@ -1,4 +1,17 @@
 import {useMemo} from 'react'
+import TextField from "@mui/material/TextField";
+function GlobalFilter({setFilter,filter}){
+    return(
+        <TextField
+            value={filter || ""}
+            onChange={e=>setFilter(e.target.value || undefined)}
+            id="standard-basic"
+            label="Поиск..."
+            placeholder={`Поиск...`}
+            variant="standard"
+        />
+    )
+}
 function Filter({column}){
     return(
         <div style={{marginTop:5}}>
@@ -13,7 +26,7 @@ function DefaultColumnFilter(
 return (
     <input
         type="text"
-        value={filterValue}
+        value={filterValue || ''}
         onChange={e=>{
         setFilter(e.target.value || undefined)}
         }
@@ -48,4 +61,4 @@ function SelectColumnFilter(
         </select>
     )
 }
-export {Filter,SelectColumnFilter,DefaultColumnFilter}
+export {Filter,SelectColumnFilter,DefaultColumnFilter,GlobalFilter}

@@ -1,76 +1,144 @@
-import React,{useEffect,useMemo} from 'react'
-import {useTable,useFilters,useExpanded} from 'react-table'
-import {useDispatch,useSelector} from 'react-redux'
-import {actionGetDashboard} from "../../store/actions/actionsDashboard";
-import {Filter,DefaultColumnFilter,SelectColumnFilter} from "./Filter";
+import React, {useEffect, useState} from 'react'
+import {useSelector} from "react-redux";
+import {useTable,useFilters,useExpanded,useGlobalFilter,usePagination} from 'react-table'
+import {Filter,DefaultColumnFilter,GlobalFilter} from "./Filter";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Stack from '@mui/material/Stack';
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select"
+import TextField from "@mui/material/TextField"
 import style from './Table.module.scss'
 
-function Table({columns,renderRowSubComponent}){
-    const dispatch = useDispatch()
-    const data = useSelector((state)=>state.dashboard.data)
-    useEffect(()=>{
-        dispatch(actionGetDashboard())
-    },[])
-
+function TableDashboard({columns,renderRowSubComponent,data,fetchData}){
+     const controlledPageCount = useSelector(state=>state.dashboard.count)
 const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page,
+    state:{globalFilter,pageIndex,pageSize},
     visibleColumns,
     prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    setGlobalFilter
 } = useTable(
     {
         columns,
         data,
+        initialState:{pageIndex:0,pageSize:5},
         defaultColumn:{Filter:DefaultColumnFilter},
+        manualPagination:true,
+        pageCount:controlledPageCount,
+        autoResetPage:false,
         expandSubRows:true
     },
-    useFilters,useExpanded)
+    useFilters,useGlobalFilter,useExpanded,usePagination);
 
- return(
-     <table {...getTableProps()} className={style.contract}>
-         <thead>
+    useEffect(()=>{
+            fetchData({pageIndex,pageSize});
+    },[pageIndex,pageSize,fetchData]);
+
+    const onChangeSelect=(event)=>{
+        setPageSize(Number(event.target.value))
+    }
+    const onChangeInput=(event)=>{
+        const page = event.target.value ? Number(event.target.value) - 1 : 0
+        gotoPage(page)
+    }
+    return(
+     <>
+    <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+    <TableContainer component={Paper}>
+     <Table {...getTableProps()} size={"small"} sx={{minWidth:600}}>
+         <TableHead>
          {headerGroups.map(headerGroup=>(
-             <tr {...headerGroup.getHeaderGroupProps()}>
+             <TableRow {...headerGroup.getHeaderGroupProps()}>
                  {headerGroup.headers.map(column=>(
-                     <th {...column.getHeaderProps()}>
+                     <TableCell {...column.getHeaderProps()}>
                          {column.render('Header')}
                          <Filter column={column}/>
-                     </th>
+                     </TableCell>
                  )
                  )}
-             </tr>
+             </TableRow>
          )
          )}
-         </thead>
-         <tbody {...getTableBodyProps()}>
+         </TableHead>
+         <TableBody {...getTableBodyProps()}>
          {
-             rows.map((row,i)=>{
+             page.map((row)=>{
                  prepareRow(row)
                  const rowProps = row.getRowProps();
                  return(
                      <React.Fragment key={rowProps.key}>
-                         <tr {...rowProps}>
+                         <TableRow {...rowProps}>
                              {row.cells.map(cell=>(
-                                 <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                 <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                              ))}
-                         </tr>
+                         </TableRow>
                          {row.isExpanded ? (
-                                 <tr>
-                                     <td colSpan={visibleColumns.length}>
+                                 <TableRow>
+                                     <TableCell colSpan={visibleColumns.length}>
                                          {renderRowSubComponent({row,rowProps,visibleColumns})}
-                                     </td>
-                                 </tr>
+                                     </TableCell>
+                                 </TableRow>
                          ):null}
                      </React.Fragment>
                  )
              })
          }
-         </tbody>
-     </table>
+         </TableBody>
+     </Table>
+    </TableContainer>
+            <Stack direction="row" spacing="2">
+                <Button variant="contained" onClick={()=>gotoPage(0)}>
+                    {'<<'}
+                </Button>
+                <Button variant="contained" onClick={()=>gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                    {'>>'}
+                </Button>
+                <Button variant="contained" onClick={previousPage} disabled={!canPreviousPage}>
+                    {'<'}
+                </Button>
+                <Button variant="contained" onClick={nextPage} disabled={!canNextPage}>
+                    {'>'}
+                </Button>
+                <span>
+                        Страница {pageIndex+1} из {pageOptions.length}
+                    </span>
+                <Select
+                    onChange={(e)=>onChangeSelect(e)}
+                    label="Количество"
+                    value={pageSize}
+                >
+                    {[5,10,20,30,40,50].map(number=>(
+                        <MenuItem value={number} key={number}>Показать {number}</MenuItem>
+                    ))}
+                </Select>
+                <TextField
+                    type="number"
+                    variant="outlined"
+                    defaultValue={pageIndex+1}
+                    onChange={(e)=>onChangeInput(e)}
+                />
+            </Stack>
+         </>
  )
 }
 
 
-export default Table
+export default TableDashboard

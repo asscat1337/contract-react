@@ -20,7 +20,7 @@ app.use(express.json({extended: true}))
 const auth = require('./router/auth');
 const dashboard = require('./router/dashboard')
 
-app.use('/auth',auth)
+app.use('/Auth',auth)
 app.use('/dashboard',dashboard)
 app.listen(port,()=>{
     console.log(`Listen in ${port}`)

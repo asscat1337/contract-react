@@ -7,15 +7,15 @@ const connection = mysql.createConnection(config).promise();
 const router = Router();
 
 router.get('/',async(req,res)=>{
-    res.render('auth/login',{
-        css:['auth.css'],
-        js:['auth.js'],
+    res.render('Auth/login',{
+        css:['Auth.css'],
+        js:['Auth.js'],
         isLogin:true,
         isAuth:req.session.isAuth
     })
 });
 router.get('/register',async(req,res)=>{
-    res.render('auth/register',{
+    res.render('Auth/register',{
         css:['register.css'],
         js:['register.js'],
         isRegister:true

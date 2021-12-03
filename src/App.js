@@ -1,4 +1,4 @@
-import Auth from "./pages/auth/Auth";
+import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import {Routes,Route} from "react-router-dom"
 import './App.css';

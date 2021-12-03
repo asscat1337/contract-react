@@ -4,16 +4,21 @@ const Service = require('../models/Services');
 class DashboardController {
     async dataContract(req, res, next) {
         try {
-            const getData = await Contract.findAll({raw: true})
-
-            const mappedData = getData.map(item => {
+            const {page,size} = req.query;
+            const getData = await Contract.findAndCountAll({
+                raw: true,
+                limit:Number(size),
+                offset:Number(page)
+            })
+            console.log(getData)
+            const mappedData = getData.rows.map(item => {
                 return {
                     ...item,
                     children: []
                 }
             })
 
-            return res.json(mappedData)
+            return res.json({count:getData.count,rows:mappedData})
         } catch (e) {
             console.log(e)
         }
