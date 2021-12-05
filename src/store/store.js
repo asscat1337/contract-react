@@ -5,12 +5,14 @@ import reducer from "./reducers/reducer";
 import patientReducer from "./reducers/patientReducer";
 import organizationReducer from "./reducers/organizationReducer";
 import departmentReducer from "./reducers/departmentReducer";
+import authReducer from './reducers/AuthReducer'
 
 const rootReducer=combineReducers({
     dashboard:reducer,
     patient:patientReducer,
     organization:organizationReducer,
-    department:departmentReducer
+    department:departmentReducer,
+    auth:authReducer
 })
 
 const store = createStore(rootReducer,composeWithDevTools(applyMiddleware(thunk)))

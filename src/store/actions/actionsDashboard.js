@@ -5,13 +5,22 @@ import {
     errorDashboard,
     getDataDashboard,
     getDataService,
-    loadDataDashboard
+    loadDataDashboard,
+    editContract
 } from "../reducers/reducer";
 
-function actionGetDashboard({page,size}) {
+function actionGetDashboard({page,size,branch,roles}) {
     return dispatch=>{
         dispatch(loadDataDashboard());
-        axios.get(`http://localhost:3005/dashboard?page=${page}&size=${size}`)
+        axios.get(`http://localhost:3005/dashboard?page=${page}&size=${size}`,{
+            headers:{
+                "Authorization":`Bearer ${sessionStorage.getItem('token')}`
+            },
+            params:{
+              branch: branch ?? null,
+              roles:roles
+            }
+        })
             .then(({data})=>dispatch(getDataDashboard(
                 {count:Math.ceil(data.count/size),rows:data.rows}
             )))
@@ -47,9 +56,17 @@ function actionDeleteContract(current) {
             .catch(error=>console.log(error))
     }
 }
+function actionEditContract(current){
+    return dispatch=>{
+        dispatch(editContract(current))
+    }
+}
+
+
 export {
     actionGetDashboard,
     actionFindService,
     actionAddDashboard,
-    actionDeleteContract
+    actionDeleteContract,
+    actionEditContract
 }

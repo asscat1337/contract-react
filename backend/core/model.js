@@ -1,5 +1,5 @@
 const {Sequelize} = require('sequelize');
-const {DB,DB_PASSWORD,DB_USER,DB_PORT,DB_HOST} = process.env;
+const {DB,DB_PASSWORD,DB_USER,DB_HOST} = process.env;
 
 
 const connection = new Sequelize(DB,DB_USER,DB_PASSWORD,{

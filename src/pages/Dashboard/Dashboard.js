@@ -8,19 +8,22 @@ import Info from "../../components/Info/Info";
 import AppContext from "../../hooks/context";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from 'react-router-dom'
-import {actionDeleteContract, actionGetDashboard} from "../../store/actions/actionsDashboard";
+import {actionDeleteContract, actionGetDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function Dashboard() {
     const dispatch = useDispatch();
+    const roles = useSelector((state)=>state.auth.user.role);
+    const branch = useSelector((state)=>state.auth.user.branch);
     const data = useSelector((state)=>state.dashboard.data);
     const [open,setOpen] = useState(false);
     const [currentId,setCurrentId] = useState(null);
     const fetchIdRef = useRef(0);
     const fetchAPIData = ({page,size})=>{
-        dispatch(actionGetDashboard({page,size}));
+        dispatch(actionGetDashboard({page,size,branch,roles}));
     };
     const fetchData = useCallback(({pageIndex,pageSize})=>{
         const fetchId = ++fetchIdRef.current;
@@ -31,16 +34,18 @@ function Dashboard() {
             })
         }
     },[]);
-
+    const onEditContract=(row)=>{
+        dispatch(actionEditContract(row.original))
+    }
     const columns = useMemo(()=>
         [
             {
                 Header:()=>null,
                 id:'expander',
                 Cell:({row})=>(
-                    <button onClick={()=>onShowInfo(row)}>
-                        { open ? 'Скрыть':'Показать'}
-                    </button>
+                    <Button onClick={()=>onShowInfo(row)} variant="outlined">
+                       <ExpandMoreIcon/>
+                    </Button>
                 ),
                 SubCell:()=>null
             },
@@ -94,12 +99,16 @@ function Dashboard() {
                 Filter:()=>null,
                 Cell:({row})=>(
                          <>
-                         <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onDeleteContract(row.original)}>
-                             Удалить
-                         </Button>
-                             <Button variant="outlined" size="small" startIcon={<EditIcon/>}>
-                                 <Link to={`/edit/${row.original.contract_id}`}>Редактировать</Link>
-                             </Button>
+                             {roles === 2 && (
+                                 <>
+                                 <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onDeleteContract(row.original)}>
+                                     Удалить
+                                 </Button>
+                                 <Button variant="outlined" size="small" startIcon={<EditIcon/>} onClick={()=>onEditContract(row)}>
+                                    <Link to={`/edit/${row.original.contract_id}`}>Редактировать</Link>
+                                 </Button>
+                                     </>
+                             )}
                          </>
                 )
             }
@@ -112,6 +121,7 @@ function Dashboard() {
     const onDeleteContract=(current)=>{
         dispatch(actionDeleteContract(current.contract_id))
     };
+
     return(
         <AppContext.Provider value={{setOpen,open}}>
             <div className={style.content}>

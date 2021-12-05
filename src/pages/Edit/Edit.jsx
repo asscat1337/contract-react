@@ -5,12 +5,14 @@ import {actionsAddService,actionGetCurrentService,actionDeleteService,actionEdit
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
 import styles from './Edit.module.scss';
+import FormContract from "../../components/Form/FormContract";
 
 
 function Edit(){
     const [open,setOpen] = useState(false);
     const [currentEdit,setCurrentEdit] = useState([]);
     const serviceData = useSelector(state=>state.dashboard.editableService);
+    const editContract = useSelector(state=>state.dashboard.editContract)
     const params = useParams();
     const dispatch = useDispatch();
     useEffect(()=>{
@@ -55,8 +57,9 @@ function Edit(){
                     <input type="submit"/>
                 </FormService>
             }
+            <FormContract/>
             <div className={styles.services}>
-                {serviceData.length ? (
+                {serviceData?.length ? (
                     serviceData?.map(item=>(
                         <div key={item.services_id} className={styles.service}>
                             <div>{item.service_name}</div>

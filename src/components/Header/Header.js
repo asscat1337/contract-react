@@ -1,10 +1,19 @@
+import {useDispatch} from 'react-redux'
+import {actionsLogoutUser} from "../../store/actions/actionsAuthUser";
+import {useNavigate} from 'react-router-dom'
 import style from './Header.module.scss'
 import Button from '@mui/material/Button';
-import TextField from "@mui/material/TextField";
 import {Link} from "react-router-dom";
 
 function Header() {
-
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const onLogoutUser=()=>{
+        dispatch(actionsLogoutUser())
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('auth');
+        navigate('/')
+    }
     return(
         <>
         <div className={style.header}>
@@ -15,8 +24,8 @@ function Header() {
                     </Button>
                     <h5>Hello user</h5>
                 </div>
-                <Button variant="contained" className={style.logout}>
-                    <Link to="/add" className={style.defaultLink}>Выход</Link>
+                <Button variant="contained" className={style.logout} onClick={onLogoutUser}>
+                    Выход
                 </Button>
             </div>
         </div>

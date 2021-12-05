@@ -75,7 +75,6 @@ router.get('/user/:id',async(req,res)=>{
 })
 router.post('/edit-user',async(req,res)=>{
     const {fio,login,branch,roles,id,password}=req.body;
-    console.log(req.body)
     if(password ===''){
         console.log(`UPDATE users SET fio='${fio}',login='${login}',branch_id='${branch}',roles='${roles}' WHERE user_id='${id}'`);
         await connection.query(`UPDATE users SET fio='${fio}',login='${login}',branch_id='${branch}',roles='${roles}' WHERE user_id='${id}'`)

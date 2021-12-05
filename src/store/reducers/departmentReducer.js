@@ -1,4 +1,7 @@
-import {SHOW_DEPARTMENT,LOAD_DEPARTMENT,ERROR_DEPARTMENT} from '../types'
+import {SHOW_DEPARTMENT,
+    LOAD_DEPARTMENT,
+    ERROR_DEPARTMENT,
+} from '../types'
 
 const initialState = {
     loading:true,
@@ -33,6 +36,5 @@ function departmentReducer(state=initialState,action){
 }
 
 export const showDepartment=payload=>({type:SHOW_DEPARTMENT,payload});
-export const errorDepartment=payload=>({type:ERROR_DEPARTMENT,payload})
-
+export const errorDepartment=payload=>({type:ERROR_DEPARTMENT,payload});
 export default departmentReducer

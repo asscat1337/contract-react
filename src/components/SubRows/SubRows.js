@@ -8,6 +8,7 @@ import styles from './SubRows.module.scss'
 
 function SubRows({current,setModal,testCurrentId}) {
     const dispatch = useDispatch();
+    const roles = useSelector(state=>state.auth.user.role);
     const data = useSelector(state=>state.dashboard.data.find(item=>item.contract_id === current));
     const loading = useSelector(state=>state.dashboard.loading);
     const {children} = data;
@@ -48,9 +49,11 @@ function SubRows({current,setModal,testCurrentId}) {
             Cell:({row})=>(
                 <>
                     <a href="#" onClick={()=>onShowModal(row)}>Показать пациентов</a>
-                    <Link to={`/patient/${row.original.services_id}`}>
-                        Добавить пациента
-                    </Link>
+                    {roles == 1 && (
+                        <Link to={`/patient/${row.original.services_id}`}>
+                            Добавить пациента
+                        </Link>
+                    )}
                 </>
             )
         }

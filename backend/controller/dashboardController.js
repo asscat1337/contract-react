@@ -1,16 +1,23 @@
 const Contract = require('../models/Contract');
 const Service = require('../models/Services');
+const Branch = require('../models/Branch')
+const {Op} = require('sequelize')
 
 class DashboardController {
     async dataContract(req, res, next) {
         try {
-            const {page,size} = req.query;
+            const {page,size,branch,roles} = req.query;
+             const test = Number(roles) === 2 ? {[Op.not]:branch} : {[Op.eq]:branch}
+             console.log(req.query)
             const getData = await Contract.findAndCountAll({
+                where:{
+                    branch: test
+
+                },
                 raw: true,
                 limit:Number(size),
-                offset:Number(page)
-            })
-            console.log(getData)
+                offset:Number(page),
+            });
             const mappedData = getData.rows.map(item => {
                 return {
                     ...item,

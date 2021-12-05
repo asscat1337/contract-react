@@ -1,8 +1,10 @@
 const {DataTypes} = require('sequelize');
 const connection = require('../core/model');
+const Roles = require('./Roles');
+const Branch = require('./Branch');
 
 
-const Users = new connection.define('users',{
+const Users = connection.define('users',{
     user_id:{
         type:DataTypes.INTEGER,
         allowNull:false,
@@ -24,13 +26,13 @@ const Users = new connection.define('users',{
     fio:{
         type:DataTypes.TEXT,
         allowNull:false
-    },
-    branch_id:{
-        type:DataTypes.INTEGER
     }
 },{
     freezeTableName:true,
     timestamps:false
 });
+
+Users.belongsTo(Roles)
+Users.belongsTo(Branch)
 
 module.exports = Users;

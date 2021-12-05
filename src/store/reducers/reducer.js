@@ -1,4 +1,5 @@
-import {GET_DATA_DASHBOARD,
+import {
+    GET_DATA_DASHBOARD,
     GET_DATA_SERVICE,
     LOAD_DATA_DASHBOARD,
     ERROR_DASHBOARD,
@@ -8,7 +9,8 @@ import {GET_DATA_DASHBOARD,
     ERROR_SERVICE,
     SHOW_SERVICE,
     DELETE_SERVICE,
-    EDIT_SERVICE
+    EDIT_SERVICE,
+    EDIT_CONTRACT
 } from "../types";
 
 const initialState = {
@@ -20,7 +22,6 @@ const initialState = {
 }
 
 function reducer(state = initialState,action){
-    console.log(action.payload)
     switch (action.type) {
         case LOAD_DATA_DASHBOARD :
             return {
@@ -129,6 +130,11 @@ function reducer(state = initialState,action){
                 })
             }
         }
+        case EDIT_CONTRACT :
+            return {
+                ...state,
+                editContract:action.payload
+            }
         default : return state
     }
 }
@@ -143,5 +149,6 @@ export const errorService=(payload)=>({type:ERROR_SERVICE,payload});
 export const showEditService=(payload)=>({type:SHOW_SERVICE,payload});
 export const deleteService=(payload)=>({type:DELETE_SERVICE,payload});
 export const editService=(payload)=>({type:EDIT_SERVICE,payload});
+export const editContract=payload=>({type:EDIT_CONTRACT,payload});
 
 export default reducer

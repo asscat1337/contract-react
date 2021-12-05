@@ -14,10 +14,12 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select"
 import TextField from "@mui/material/TextField"
+import {CircularProgress} from "@mui/material";
 import style from './Table.module.scss'
 
 function TableDashboard({columns,renderRowSubComponent,data,fetchData}){
-     const controlledPageCount = useSelector(state=>state.dashboard.count)
+    const controlledPageCount = useSelector(state=>state.dashboard.count);
+    const loading = useSelector((state)=>state.dashboard.loading);
 const {
     getTableProps,
     getTableBodyProps,
@@ -59,6 +61,11 @@ const {
         const page = event.target.value ? Number(event.target.value) - 1 : 0
         gotoPage(page)
     }
+
+    if(loading){
+        return <CircularProgress color="success"/>
+    }
+
     return(
      <>
     <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>

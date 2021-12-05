@@ -1,9 +1,10 @@
 const {DataTypes} = require('sequelize');
 const connection = require('../core/model');
+const Users = require('./Users');
 
 
 
-const Branch = new connection.define('branch',{
+const Branch =  connection.define('branch',{
     branch_id:{
         type:DataTypes.INTEGER,
         allowNull:false,
@@ -18,5 +19,10 @@ const Branch = new connection.define('branch',{
     freezeTableName:true,
     timestamps:false
 });
+Users.associate = models=>{
+    Users.hasMany(models.Branch,
+        {foreignKey:'userId'});
+}
+
 
 module.exports = Branch

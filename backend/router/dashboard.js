@@ -6,8 +6,9 @@ const fs = require('fs')
 const csvParser = require('csv-parser')
 const router = Router();
 const dashboardController = require('../controller/dashboardController');
+const protect = require('../middleware/authJWT')
 
-router.get('/',dashboardController.dataContract);
+router.get('/',protect,dashboardController.dataContract);
 router.get('/get-branch',async (req,res)=>{
     await connection.query('SELECT * from branch')
         .then(([rows])=>{
