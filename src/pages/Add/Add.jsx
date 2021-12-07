@@ -8,6 +8,7 @@ import Select from "react-select"
 import {getOrganization} from '../../store/actions/actionsOrganization'
 import {getDepartment} from "../../store/actions/actionsDepartment";
 import {actionAddDashboard} from "../../store/actions/actionsDashboard";
+import FormContract from '../../components/Form/FormContract'
 
 function Add(){
     const dispatch = useDispatch()
@@ -32,66 +33,67 @@ function Add(){
     return (
         <div className={styles.formContent}>
             <h1>Форма добавления контракта/договора</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                <label htmlFor="">Выберите дату </label>
-                <input
-                    type="date"
-                    {...register("date")}
-                />
-                <label htmlFor="">Введите сумму</label>
-                <input
-                       type="text"
-                       {...register("sum",{required:true})}
-                />
-                <p>{errors.sum?.message}</p>
-                <label htmlFor="">Выберите дату завершения</label>
-                <input type="date"
-                       {...register("ended",{required:true})}
-                />
-                <label htmlFor="">Выберите срок оказания</label>
-                <input type="date"
-                       {...register("rendering",{required:true})}
-                />
-                <label htmlFor="">Введите предмет договора</label>
-                <input type="text"
-                       {...register("description",{required:true})}
-                />
-                <label htmlFor="">Выберите МО</label>
-                <Controller
-                    control={control}
-                    name="organization"
-                    defaultValue=""
-                    render={({field:{onChange,ref,value}})=>{
-                       return <Select
-                            placeholder="Выберите..."
-                            isSearchable
-                            isClearable
-                            className={styles.select}
-                            options={options}
-                            ref={ref}
-                            onChange={val=>onChange(val.label)}
-                        />
-                    }}
+                <FormContract/>
+            {/*<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>*/}
+            {/*    <label htmlFor="">Выберите дату </label>*/}
+            {/*    <input*/}
+            {/*        type="date"*/}
+            {/*        {...register("date")}*/}
+            {/*    />*/}
+            {/*    <label htmlFor="">Введите сумму</label>*/}
+            {/*    <input*/}
+            {/*           type="text"*/}
+            {/*           {...register("sum",{required:true})}*/}
+            {/*    />*/}
+            {/*    <p>{errors.sum?.message}</p>*/}
+            {/*    <label htmlFor="">Выберите дату завершения</label>*/}
+            {/*    <input type="date"*/}
+            {/*           {...register("ended",{required:true})}*/}
+            {/*    />*/}
+            {/*    <label htmlFor="">Выберите срок оказания</label>*/}
+            {/*    <input type="date"*/}
+            {/*           {...register("rendering",{required:true})}*/}
+            {/*    />*/}
+            {/*    <label htmlFor="">Введите предмет договора</label>*/}
+            {/*    <input type="text"*/}
+            {/*           {...register("description",{required:true})}*/}
+            {/*    />*/}
+            {/*    <label htmlFor="">Выберите МО</label>*/}
+            {/*    <Controller*/}
+            {/*        control={control}*/}
+            {/*        name="organization"*/}
+            {/*        defaultValue=""*/}
+            {/*        render={({field:{onChange,ref,value}})=>{*/}
+            {/*           return <Select*/}
+            {/*                placeholder="Выберите..."*/}
+            {/*                isSearchable*/}
+            {/*                isClearable*/}
+            {/*                className={styles.select}*/}
+            {/*                options={options}*/}
+            {/*                ref={ref}*/}
+            {/*                onChange={val=>onChange(val.label)}*/}
+            {/*            />*/}
+            {/*        }}*/}
 
-                />
-                <label htmlFor="">Выберите Отделение</label>
-                <Controller
-                    control={control}
-                    name="branch"
-                    defaultValue=""
-                    render={({field:{onChange,render,value}})=>(
-                        <Select
-                            placeholder="Выберите..."
-                            isSearchable
-                            isClearable
-                            className={styles.select}
-                            options={branch}
-                            onChange={val=>onChange(val.label)}
-                        />
-                    )}
-                />
-                <input type="submit"/>
-            </form>
+            {/*    />*/}
+            {/*    <label htmlFor="">Выберите Отделение</label>*/}
+            {/*    <Controller*/}
+            {/*        control={control}*/}
+            {/*        name="branch"*/}
+            {/*        defaultValue=""*/}
+            {/*        render={({field:{onChange,render,value}})=>(*/}
+            {/*            <Select*/}
+            {/*                placeholder="Выберите..."*/}
+            {/*                isSearchable*/}
+            {/*                isClearable*/}
+            {/*                className={styles.select}*/}
+            {/*                options={branch}*/}
+            {/*                onChange={val=>onChange(val.label)}*/}
+            {/*            />*/}
+            {/*        )}*/}
+            {/*    />*/}
+            {/*    <input type="submit"/>*/}
+            {/*</form>*/}
         </div>
     )
 }

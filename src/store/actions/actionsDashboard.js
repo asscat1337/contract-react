@@ -57,6 +57,7 @@ function actionDeleteContract(current) {
     }
 }
 function actionEditContract(current){
+    console.log(current)
     return dispatch=>{
         dispatch(editContract(current))
     }

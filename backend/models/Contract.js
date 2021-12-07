@@ -10,7 +10,7 @@ const Contract = connection.define('contract',{
         type:DataTypes.INTEGER
     },
     date:{
-        type:DataTypes.DATE,
+        type:DataTypes.DATEONLY,
         allowNull:false
     },
     sum:{
@@ -18,11 +18,11 @@ const Contract = connection.define('contract',{
         allowNull:false
     },
     ended:{
-        type:DataTypes.DATE,
+        type:DataTypes.DATEONLY,
         allowNull:false
     },
     rendering:{
-        type:DataTypes.DATE,
+        type:DataTypes.DATEONLY,
         allowNull:false
     },
     description:{

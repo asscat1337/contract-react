@@ -1,7 +1,8 @@
 const Contract = require('../models/Contract');
 const Service = require('../models/Services');
-const Branch = require('../models/Branch')
-const {Op} = require('sequelize')
+const Branch = require('../models/Branch');
+const {Op} = require('sequelize');
+const dayjs = require('dayjs');
 
 class DashboardController {
     async dataContract(req, res, next) {
@@ -33,8 +34,8 @@ class DashboardController {
 
     async addContract(req, res, next) {
         try {
-            const {sum, date, ended, rendering, subject, organization, branch, description} = req.body;
-            await Contract.create({sum, date, ended, rendering, subject, organization, branch, description, type: 0})
+            const {department} = req.body
+            await Contract.create({...req.body,branch:department,date:dayjs().format('YYYY-MM-DD'),type: 0})
                 .then(() => {
                     return res.send('ok').status(200)
                 })

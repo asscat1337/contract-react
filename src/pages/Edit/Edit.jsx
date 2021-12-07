@@ -57,7 +57,10 @@ function Edit(){
                     <input type="submit"/>
                 </FormService>
             }
-            <FormContract/>
+            <FormContract
+                editContract={editContract}
+                editable={true}
+            />
             <div className={styles.services}>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
