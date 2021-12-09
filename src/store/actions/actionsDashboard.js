@@ -56,10 +56,17 @@ function actionDeleteContract(current) {
             .catch(error=>console.log(error))
     }
 }
-function actionEditContract(current){
-    console.log(current)
+function actionEditDataContract(current){
     return dispatch=>{
         dispatch(editContract(current))
+    }
+}
+function actionEditContract(data){
+    return dispatch=>{
+        console.log(data)
+        // axios.post('http://localhost:3005/dashobard/edit-contract',data)
+        //     .then(({data})=>dispatch)
+        //     .catch(error=>dispatch(errorDashboard(error)))
     }
 }
 
@@ -69,5 +76,6 @@ export {
     actionFindService,
     actionAddDashboard,
     actionDeleteContract,
+    actionEditDataContract,
     actionEditContract
 }

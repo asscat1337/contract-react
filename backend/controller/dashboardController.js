@@ -35,7 +35,7 @@ class DashboardController {
     async addContract(req, res, next) {
         try {
             const {department} = req.body
-            await Contract.create({...req.body,branch:department,date:dayjs().format('YYYY-MM-DD'),type: 0})
+            await Contract.create({...req.body,branch:department,date:dayjs().format('YYYY-MM-DD')})
                 .then(() => {
                     return res.send('ok').status(200)
                 })
@@ -129,6 +129,18 @@ class DashboardController {
         try{
             const {id,fio,birthday} = req.body;
 
+        }catch (e) {
+            return res.send(e).status(500)
+        }
+    }
+    async editContract(req,res,next){
+        try {
+            const {id} = req.body
+            await Contract.update(req.body,{
+                where:{
+                    contract_id:id
+                }
+            }).then(()=>res.status(200).send())
         }catch (e) {
             return res.send(e).status(500)
         }

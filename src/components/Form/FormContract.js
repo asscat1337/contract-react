@@ -1,18 +1,39 @@
+import React from "react";
 import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
-import {TextField,Button} from "@mui/material";
+import {TextField,Button,FormGroup,FormControlLabel,Checkbox,FormHelperText,Grid} from "@mui/material";
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import Select from 'react-select'
+import NumberFormat from "react-number-format";
 import {getDepartment} from "../../store/actions/actionsDepartment";
 import {getOrganization} from "../../store/actions/actionsOrganization";
-import {actionEditContract} from "../../store/actions/actionsDashboard";
-import {actionAddDashboard} from "../../store/actions/actionsDashboard";
+import {actionEditDataContract} from "../../store/actions/actionsDashboard";
+import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import AdapterDayjs from '@mui/lab/AdapterDayjs';
 
-
+const NumberFormatCustom = React.forwardRef((props,ref)=>{
+    const {onChange,...other} = props
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={ref}
+            onValueChange={(values)=>{
+                onChange({
+                    target:{
+                        name:props.name,
+                        value:values.value
+                    }
+                })
+            }}
+            thousandSeparator
+            isNumericString
+            prefix="₽"
+        />
+    )
+})
 
 
 function FormContract({editContract = {},editable = false}){
@@ -23,11 +44,12 @@ function FormContract({editContract = {},editable = false}){
          rendering: editable ? yup.date() : yup.date().required('Выберите дату начала'),
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
-         ended:editable ? yup.date() : yup.date().required('Выберите дату окончания')
+         ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
+          type:yup.boolean()
         //
 
     });
-    const {register,handleSubmit,control,formState:{errors}} = useForm({
+    const {register,handleSubmit,control,formState:{errors},reset} = useForm({
         resolver:yupResolver(schema)
     });
     const dispatch = useDispatch();
@@ -43,20 +65,24 @@ function FormContract({editContract = {},editable = false}){
        if(editable){
        const transformedEdit =  {
             ...data,
+            id:editContract.contract_id,
             organization:data.organization ?? editContract.organization,
             branch:data.department ?? editContract.branch,
             ended:data.ended ?? editContract.ended,
-            rendering: data.rendering ?? editContract.rendering
+            rendering: data.rendering ?? editContract.rendering,
+            sum:data.sum ?? editContract.sum
         };
         dispatch(actionEditContract(transformedEdit))
        }else{
-           console.log(data)
-            dispatch(actionAddDashboard(data))
+           dispatch(actionAddDashboard(data));
+           reset({})
        }
     }
 
     return(
+        <Grid container direction="column" justifyContent="center" alignItems="center" columnSpacing={{xs:1,sm:2,md:3}}>
             <form action="" onSubmit={handleSubmit(onSubmitForm)}>
+                <Grid item>
                 <Controller
                     control={control}
                     name="rendering"
@@ -72,7 +98,6 @@ function FormContract({editContract = {},editable = false}){
                             }}
                         />
                     )}
-
                 />
                 <Controller
                     control={control}
@@ -90,29 +115,50 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                 />
-                <TextField
-                    required
-                    id="description"
-                    label="Предмет договора"
-                    defaultValue={editable ? editContract.description : ""}
-                    error={!!errors.description}
-                    {...register('description')}
-                />
-                <TextField
-                    required
-                    id="sum"
-                    label="Сумма"
-                    error={!!errors.sum}
-                    defaultValue={editable ? editContract.sum : ""}
-                    {...register('sum')}
-                />
+                </Grid>
+
+                <Grid item>
+                    <TextField
+                        fullWidth
+                        required
+                        id="description"
+                        label="Предмет договора"
+                        defaultValue={editable ? editContract.description : ""}
+                        error={!!errors.description}
+                        margin="normal"
+                        {...register('description')}
+                    />
+                </Grid>
+                <Grid item>
+                    <Controller
+                        name="sum"
+                        control={control}
+                        render={({field:{onChange}})=>(
+                            <TextField
+                                fullWidth
+                                id="sum"
+                                label="Сумма"
+                                onChange={val=>onChange(val)}
+                                error={!!errors.sum}
+                                defaultValue={editable ? editContract.sum : ""}
+                                margin="normal"
+                                // InputProps={{
+                                //     inputComponent:NumberFormatCustom
+                                // }}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                <Grid item>
                 <Controller
                     control={control}
                     name="organization"
                     rules={{required:true}}
                     render={({field:{onChange,value}})=>(
                         <Select
-                            defaultValue={{label:editContract.organization}}
+                            placeholder="Выберите организацию..."
+                            defaultValue={organization.find(org=>org.label === editContract.organization)}
                             isClearable
                             isSearchable
                             options={organization}
@@ -126,7 +172,8 @@ function FormContract({editContract = {},editable = false}){
                     rules={{required:true}}
                     render={({field:{onChange,value,ref}})=>(
                         <Select
-                             defaultValue={{label:editContract.branch}}
+                            placeholder="Выберите отделение..."
+                            defaultValue={department.find(dep=>dep.label === editContract.branch)}
                             onChange={val=>onChange(val.label)}
                             isClearable
                             isSearchable
@@ -134,11 +181,32 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                 />
+                </Grid>
+                <Grid item>
+                    <h5>Выберите тип</h5>
+                    <FormGroup>
+                        <FormControlLabel control={
+                            <Controller
+                                control={control}
+                                name="type"
+                                render={({field:{onChange}})=>(
+                                    <Checkbox
+                                        onChange={e=>onChange(e.target.checked)}
+                                    />
+                                )}
+                            />
+                        }
+                        label="Контракт"
+                        />
+                        <FormHelperText>Если не выбран тип,то по умолчанию будет "Договор"</FormHelperText>
+                    </FormGroup>
                 <Button variant="outlined" type="submit" onSubmit={onSubmitForm}>
-                    Редактировать
+                    {editable ? " Редактировать" : "Добавить"}
                 </Button>
+            </Grid>
             </form>
+        </Grid>
     )
 }
 
-export default FormContract
+export default FormContract;

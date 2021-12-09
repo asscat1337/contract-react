@@ -5,6 +5,7 @@ import {actionsAddService,actionGetCurrentService,actionDeleteService,actionEdit
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
 import styles from './Edit.module.scss';
+import {CssBaseline,Grid} from "@mui/material";
 import FormContract from "../../components/Form/FormContract";
 
 
@@ -35,6 +36,7 @@ function Edit(){
     }
     return (
         <div>
+            <CssBaseline/>
             {
                 open && <Modal
                     onClose={setOpen}
@@ -64,7 +66,7 @@ function Edit(){
             <div className={styles.services}>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
-                        <div key={item.services_id} className={styles.service}>
+                        <Grid key={item.services_id} className={styles.service}>
                             <div>{item.service_name}</div>
                             <div>{item.service_count}</div>
                             <div>{item.service_cost}</div>
@@ -72,7 +74,7 @@ function Edit(){
                                 <button onClick={()=>onDeleteService(item)}>Удалить</button>
                                 <button onClick={()=>onEditService(item)}>Редактировать</button>
                             </div>
-                        </div>
+                        </Grid>
                     ))
                 ):(
                     <div>Нет данных</div>

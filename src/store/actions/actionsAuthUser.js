@@ -19,6 +19,7 @@ function actionsLoginUser(user){
 function actionsLogoutUser(){
     return dispatch=>{
        dispatch(logoutUser())
+        localStorage.clear()
     }
 }
 function actionsResetPassword(data){

@@ -1,6 +1,5 @@
-import {useCallback, useRef, useState, useMemo, useEffect} from 'react'
+import {useCallback, useRef, useState, useMemo} from 'react'
 import Table from "../../components/Table/Table";
-import Header from "../../components/Header/Header";
 import style from "./Dashboard.module.scss"
 import {SelectColumnFilter} from "../../components/Table/Filter";
 import dayjs from "dayjs";
@@ -8,11 +7,13 @@ import Info from "../../components/Info/Info";
 import AppContext from "../../hooks/context";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from 'react-router-dom'
-import {actionDeleteContract, actionGetDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
+import {actionDeleteContract, actionGetDashboard,actionEditDataContract} from "../../store/actions/actionsDashboard";
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
+import {CssBaseline} from "@material-ui/core";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Header from "../../components/Header/Header";
 
 function Dashboard() {
     const dispatch = useDispatch();
@@ -22,6 +23,8 @@ function Dashboard() {
     const [open,setOpen] = useState(false);
     const [currentId,setCurrentId] = useState(null);
     const fetchIdRef = useRef(0);
+
+
     const fetchAPIData = ({page,size})=>{
         dispatch(actionGetDashboard({page,size,branch,roles}));
     };
@@ -35,7 +38,7 @@ function Dashboard() {
         }
     },[]);
     const onEditContract=(row)=>{
-        dispatch(actionEditContract(row.original))
+        dispatch(actionEditDataContract(row.original))
     }
     const columns = useMemo(()=>
         [
@@ -89,7 +92,7 @@ function Dashboard() {
             },
             {
                 Header:"Тип",
-                accessor: "type",
+                accessor: (d)=>Number(d.type) === 1 ? "Контракт" : "Договор",
                 Filter:SelectColumnFilter,
                 filter:'equals'
             },
@@ -124,8 +127,9 @@ function Dashboard() {
 
     return(
         <AppContext.Provider value={{setOpen,open}}>
-            <div className={style.content}>
-                <Header/>
+            <CssBaseline/>
+            <h1>Журнал регистрации контрактов и договоров</h1>
+            <div>
                 {open &&
                 <Info
                     currentId={currentId}
@@ -138,7 +142,6 @@ function Dashboard() {
                 />
             </div>
         </AppContext.Provider>
-
     )
 }
 

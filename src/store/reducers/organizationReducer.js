@@ -11,7 +11,7 @@ function organizationReducer(state = initialState,action){
             case SHOW_ORG :
                 return {
                     loading:false,
-                    organization: [...state.organization,action.payload].flat(),
+                    organization: action.payload,
                     error:''
                 }
             case  ERROR_ORG :

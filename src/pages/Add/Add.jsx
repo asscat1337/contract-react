@@ -4,11 +4,11 @@ import * as yup from 'yup'
 import {useForm,Controller} from "react-hook-form";
 import {useSelector,useDispatch} from "react-redux";
 import {yupResolver} from '@hookform/resolvers/yup'
-import Select from "react-select"
 import {getOrganization} from '../../store/actions/actionsOrganization'
 import {getDepartment} from "../../store/actions/actionsDepartment";
 import {actionAddDashboard} from "../../store/actions/actionsDashboard";
 import FormContract from '../../components/Form/FormContract'
+import {CssBaseline} from "@mui/material";
 
 function Add(){
     const dispatch = useDispatch()
@@ -32,6 +32,7 @@ function Add(){
     }
     return (
         <div className={styles.formContent}>
+            <CssBaseline/>
             <h1>Форма добавления контракта/договора</h1>
                 <FormContract/>
             {/*<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>*/}

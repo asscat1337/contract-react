@@ -47,6 +47,7 @@ router.post('/findService',dashboardController.findService);
 router.post('/add',dashboardController.addContract);
 router.delete('/delete-contract',dashboardController.deleteContract);
 router.post('/delete-service',dashboardController.deleteService);
+router.post('/edit-contract',dashboardController.editContract)
 router.post('/updateData',async(req,res)=>{
     console.log(req.body)
     async function updateData(){
