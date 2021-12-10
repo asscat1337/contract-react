@@ -3,7 +3,7 @@ import styles from './Info.module.scss'
 import SubRows from "../SubRows/SubRows";
 import Modal from "../Modal/Modal";
 import {useDispatch,useSelector} from "react-redux";
-import action3 from "../../store/actions/action3";
+import {action3} from "../../store/actions/action3";
 import AppContext from "../../hooks/context";
 import dayjs from "dayjs";
 

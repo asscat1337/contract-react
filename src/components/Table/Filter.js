@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 function GlobalFilter({setFilter,filter}){
     return(
         <TextField
+            fullWidth
             value={filter || ""}
             onChange={e=>setFilter(e.target.value || undefined)}
             id="standard-basic"

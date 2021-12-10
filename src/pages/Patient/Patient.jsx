@@ -3,6 +3,7 @@ import {useDispatch} from "react-redux";
 import {useParams} from "react-router-dom";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
+import {actionAddPatient} from "../../store/actions/action3";
 
 function Patient(){
     const params = useParams();
@@ -16,8 +17,7 @@ function Patient(){
         resolver:yupResolver(schema)
     });
     const onSubmit=data=>{
-        console.log(data);
-        console.log(params)
+        dispatch(actionAddPatient({...data,id:params.id}))
     };
     return(
         <div>

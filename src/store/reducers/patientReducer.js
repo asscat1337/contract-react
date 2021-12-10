@@ -40,6 +40,7 @@ function patientReducer(state = initialState,action){
             default: return state
         }
 }
-export const showPatient =(payload)=>({type:SHOW_PATIENT,payload})
+export const showPatient =(payload)=>({type:SHOW_PATIENT,payload});
+export const addPatient=(payload)=>({type:ADD_PATIENT,payload})
 
 export default patientReducer

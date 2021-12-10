@@ -1,9 +1,11 @@
 
 
-
 function AccessDenied(){
     return (
-        <div>Ресурс запрещен</div>
+        <div>
+            Ресурс запрещен
+            <img src="angrydude.png" alt=""/>
+        </div>
     )
 }
 

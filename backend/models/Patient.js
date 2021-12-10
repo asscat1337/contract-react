@@ -3,7 +3,7 @@ const connection = require('../core/model');
 
 
 
-const Patient = new connection.define('patient',{
+const Patient = connection.define('patient',{
     patient_id:{
         type:DataTypes.INTEGER,
         allowNull:false,

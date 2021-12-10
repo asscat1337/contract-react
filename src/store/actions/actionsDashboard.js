@@ -63,10 +63,9 @@ function actionEditDataContract(current){
 }
 function actionEditContract(data){
     return dispatch=>{
-        console.log(data)
-        // axios.post('http://localhost:3005/dashobard/edit-contract',data)
-        //     .then(({data})=>dispatch)
-        //     .catch(error=>dispatch(errorDashboard(error)))
+        axios.post('http://localhost:3005/dashobard/edit-contract',data)
+            .then(({data})=>dispatch)
+            .catch(error=>dispatch(errorDashboard(error)))
     }
 }
 

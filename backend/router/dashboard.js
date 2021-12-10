@@ -75,17 +75,7 @@ router.post('/showCount',async(req,res)=>{
             })
             ///
 })
-router.get('/add-patient',async(req,res)=>{
-    res.render('add-patient',{
-        isAuth:req.session.isAuth,
-        user:req.session.username,
-        fio:req.session.fio,
-        isActive:true,
-        rolesId:req.session.rolesId,
-        js:['lib/burger.js','dashboard.js'],
-        css:['add-patient.css']
-    })
-})
+router.post('/add-patient',dashboardController.addPatient)
 /// переделать позже
 router.post('/showAllService',async(req,res)=>{
     const {id} = req.body;

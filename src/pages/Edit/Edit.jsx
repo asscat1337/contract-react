@@ -5,7 +5,7 @@ import {actionsAddService,actionGetCurrentService,actionDeleteService,actionEdit
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
 import styles from './Edit.module.scss';
-import {CssBaseline,Grid} from "@mui/material";
+import {CssBaseline,Grid,Paper,Box,Button} from "@mui/material";
 import FormContract from "../../components/Form/FormContract";
 
 
@@ -35,52 +35,61 @@ function Edit(){
         dispatch(actionDeleteService(data.services_id))
     }
     return (
-        <div>
+        <Box sx={{flexGrow:1}}>
+            <h5>Форма редактирования контрактов и услуг</h5>
+        <Grid container spacing={10} direction="row" justifyContent="space-around" alignItems="center">
             <CssBaseline/>
-            {
-                open && <Modal
-                    onClose={setOpen}
-                    title="Редактирование"
-                >
-                <div>
-                    <h1>Hello</h1>
-                    <FormService
-                        onSubmitForm={onSubmitForm}
-                        editData={currentEdit}
-                        editable>
-                        <input type="submit"/>
-                    </FormService>
-                </div>
-                </Modal>
-            }
-            <h1>Форма редактирования контрактов и услуг</h1>
+            <Grid item xs={6}>
+                {
+                    open && <Modal
+                        onClose={setOpen}
+                        title="Редактирование"
+                    >
+                        <div>
+                            <h1>Hello</h1>
+                            <FormService
+                                onSubmitForm={onSubmitForm}
+                                editData={currentEdit}
+                                editable>
+                                <Button type="submit">
+                                    Редактировать
+                                </Button>
+                            </FormService>
+                        </div>
+                    </Modal>
+                }
             {!open &&
                 <FormService onSubmitForm={onSubmitForm}>
-                    <input type="submit"/>
+                    <Button type="submit">
+                       Добавить услугу
+                    </Button>
                 </FormService>
             }
             <FormContract
                 editContract={editContract}
                 editable={true}
             />
-            <div className={styles.services}>
+            </Grid>
+            <Grid>
+                <h5>Список услуг</h5>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
-                        <Grid key={item.services_id} className={styles.service}>
+                        <Paper key={item.services_id}>
                             <div>{item.service_name}</div>
                             <div>{item.service_count}</div>
                             <div>{item.service_cost}</div>
-                            <div className={styles.buttons}>
+                            <div>
                                 <button onClick={()=>onDeleteService(item)}>Удалить</button>
                                 <button onClick={()=>onEditService(item)}>Редактировать</button>
                             </div>
-                        </Grid>
+                        </Paper>
                     ))
                 ):(
-                    <div>Нет данных</div>
+                    <div>Нет данных  😞</div>
                 )}
-            </div>
-        </div>
+            </Grid>
+        </Grid>
+        </Box>
     )
 }
 

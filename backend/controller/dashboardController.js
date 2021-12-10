@@ -1,6 +1,7 @@
 const Contract = require('../models/Contract');
 const Service = require('../models/Services');
 const Branch = require('../models/Branch');
+const Patient = require('../models/Patient');
 const {Op} = require('sequelize');
 const dayjs = require('dayjs');
 
@@ -128,6 +129,15 @@ class DashboardController {
     async addPatient(req,res,next){
         try{
             const {id,fio,birthday} = req.body;
+            await Patient.create(
+                {
+                    fio,
+                    birthday,
+                    date_added: dayjs().format("YYYY-MM-DD"),
+                    service_id:id
+                })
+                .then(()=>res.status(200).json({'message':'Пациент добавлен'}))
+                .catch(error=>res.status(500).json({'message':error}))
 
         }catch (e) {
             return res.send(e).status(500)

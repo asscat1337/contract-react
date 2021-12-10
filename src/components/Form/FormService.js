@@ -1,3 +1,4 @@
+import {TextField,Button} from '@material-ui/core'
 import {useEffect} from 'react'
 import {useForm} from "react-hook-form";
 import * as yup from 'yup'
@@ -34,16 +35,19 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
 
 return(
     <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <input
+        <TextField
             type="text"
+            label="Название услуги"
             {...register('serviceName')}
         />
-        <input
+        <TextField
             type="text"
+            label="Стоимость"
             {...register('serviceCost')}
         />
-        <input
+        <TextField
             type="text"
+            label="Количество"
             {...register('serviceCount')}
         />
         {children}
