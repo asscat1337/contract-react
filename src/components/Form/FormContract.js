@@ -1,18 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
 import {TextField,Button,FormGroup,FormControlLabel,Checkbox,FormHelperText,Grid} from "@mui/material";
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import Select from 'react-select'
 import NumberFormat from "react-number-format";
 import {getDepartment} from "../../store/actions/actionsDepartment";
 import {getOrganization} from "../../store/actions/actionsOrganization";
-import {actionEditDataContract} from "../../store/actions/actionsDashboard";
-import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
-import AdapterDayjs from '@mui/lab/AdapterDayjs';
+import {actionAddDashboard,actionEditContract,actionAddContractFromFile} from "../../store/actions/actionsDashboard";
+import {Input,InputLabel} from "@material-ui/core";
+
 
 const NumberFormatCustom = React.forwardRef((props,ref)=>{
     const {onChange,...other} = props
@@ -37,6 +35,7 @@ const NumberFormatCustom = React.forwardRef((props,ref)=>{
 
 
 function FormContract({editContract = {},editable = false}){
+    const [onFile,onChangeFile] = useState(null)
     const schema = yup.object().shape({
          // костыль
          sum:editable ? yup.number() : yup.number().required('Введите сумма'),
@@ -61,6 +60,14 @@ function FormContract({editContract = {},editable = false}){
         dispatch(getOrganization());
     }
 
+    const onChange=({target})=>{
+        onChangeFile(target.files[0])
+    };
+
+    const onClickAddFiles=()=>{
+        dispatch(actionAddContractFromFile(onFile))
+    }
+
     const onSubmitForm=(data)=>{
        if(editable){
        const transformedEdit =  {
@@ -72,7 +79,8 @@ function FormContract({editContract = {},editable = false}){
             rendering: data.rendering ?? editContract.rendering,
             sum:data.sum ?? editContract.sum
         };
-        dispatch(actionEditContract(transformedEdit))
+       console.log(transformedEdit)
+         dispatch(actionEditContract(transformedEdit))
        }else{
            dispatch(actionAddDashboard(data));
            reset({})
@@ -203,6 +211,31 @@ function FormContract({editContract = {},editable = false}){
                 <Button variant="outlined" type="submit" onSubmit={onSubmitForm}>
                     {editable ? " Редактировать" : "Добавить"}
                 </Button>
+                    {/*<>*/}
+                    {/*    <InputLabel htmlFor="import-button">*/}
+                    {/*       <Input*/}
+                    {/*            id="import-button"*/}
+                    {/*            inputProps={{*/}
+                    {/*                accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"*/}
+                    {/*            }}*/}
+                    {/*            style={{display:"none"}}*/}
+                    {/*            onChange={onChange}*/}
+                    {/*            type="file"*/}
+                    {/*       />*/}
+                    {/*       <Button*/}
+                    {/*        color="secondary"*/}
+                    {/*        variant="contained"*/}
+                    {/*        component="span"*/}
+                    {/*       >*/}
+                    {/*           Загрузить файл...*/}
+                    {/*       </Button>*/}
+
+                    {/*        <Button variant="outlined" onClick={onClickAddFiles}>*/}
+                    {/*            Загрузить*/}
+                    {/*        </Button>*/}
+
+                    {/*    </InputLabel>*/}
+                    {/*</>*/}
             </Grid>
             </form>
         </Grid>

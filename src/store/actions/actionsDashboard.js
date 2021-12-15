@@ -6,7 +6,8 @@ import {
     getDataDashboard,
     getDataService,
     loadDataDashboard,
-    editContract
+    editContract,
+    addContractFromFile
 } from "../reducers/reducer";
 
 function actionGetDashboard({page,size,branch,roles}) {
@@ -69,6 +70,15 @@ function actionEditContract(data){
     }
 }
 
+function actionAddContractFromFile(data){
+    const formData = new FormData()
+    formData.append('file',data);
+    return dispatch=>{
+        axios.post('http://localhost:3005/dashboard/upload-file',formData)
+            .then(({data})=>console.log(data))
+    }
+}
+
 
 export {
     actionGetDashboard,
@@ -76,5 +86,6 @@ export {
     actionAddDashboard,
     actionDeleteContract,
     actionEditDataContract,
-    actionEditContract
+    actionEditContract,
+    actionAddContractFromFile
 }

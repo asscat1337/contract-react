@@ -3,6 +3,7 @@ import {useTable} from 'react-table'
 import action2 from "../../store/actions/action2";
 import {useMemo,useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
+import {TableCell,TableBody,TableRow,TableHead,TableContainer} from "@mui/material";
 import styles from './SubRows.module.scss'
 
 
@@ -78,31 +79,31 @@ function SubRows({current,setModal,testCurrentId}) {
     }
     return (
         <>
-                <table {...getTableProps()} className={styles.service}>
-                    <thead>
+                <TableContainer {...getTableProps()} className={styles.service}>
+                    <TableHead>
                     {headerGroups.map(headerGroup=>(
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <TableRow {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column=>{
-                                return <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>
                             })}
-                        </tr>
+                        </TableRow>
                     ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
+                    </TableHead>
+                    <TableBody {...getTableBodyProps()}>
                     {
                         rows.map((row,i)=>{
                             prepareRow(row)
                             return(
-                                <tr {...row.getRowProps()}>
+                                <TableRow {...row.getRowProps()}>
                                     {row.cells.map(cell=>{
-                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                                     })}
-                                </tr>
+                                </TableRow>
                             )
                         })
                     }
-                    </tbody>
-                </table>
+                    </TableBody>
+                </TableContainer>
         </>
     )
 }

@@ -1,32 +1,37 @@
-import {useState} from 'react'
-import {createTheme, ThemeProvider,useTheme} from "@material-ui/core/styles";
+import {useState,useEffect} from 'react'
+import {createTheme, ThemeProvider} from "@material-ui/core/styles";
 import {useLocation} from 'react-router-dom'
 import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import {Routes,Route} from "react-router-dom"
-import {useSelector} from "react-redux";
 import './App.css';
 import Add from "./pages/Add/Add";
 import Patient from "./pages/Patient/Patient";
 import Edit from "./pages/Edit/Edit";
 import ProtectedRoute from "./helpers/ProtectedRoute";
 import Admin from "./pages/Admin/Admin";
+import NotFound from "./pages/NotFound/NotFound";
 import Header from "./components/Header/Header";
-import AppContext from "./hooks/context";
 
 function App() {
-    const [darkState,setDarkState] = useState(false);
-    const palletType = darkState ? "dark" : "light";
+    const [darkState,setDarkState] = useState(true);
     const darkTheme = createTheme({
         palette:{
-            mode:palletType,
-            type:palletType
+            mode:darkState ? "dark" : "light",
+            type:darkState ? "dark" : "light"
         }
     });
 
+    useEffect(()=>{
+        const themeType = localStorage.getItem('theme')
+        if(themeType !== "dark"){
+            setDarkState(false)
+        }
+    },[])
+
     const handleThemeChange=()=>{
+        localStorage.setItem('theme',darkState ? "light" : "dark");
         setDarkState(!darkState);
-        console.log(darkTheme)
     }
   const location = useLocation();
   return (
@@ -47,8 +52,10 @@ function App() {
                          }
                          path="dashboard"/>
                  <Route element={<ProtectedRoute roles={[2]} component={Add}/>} path="/add" exact/>
-                <Route element={<ProtectedRoute roles={[2]} component={Edit}/>} path="/edit/:id"/>
+                 <Route element={<ProtectedRoute roles={[2]} component={Edit}/>} path="/edit/:id"/>
                  <Route element={<Patient/>} path="/patient/:id"/>
+                 <Route element={<NotFound/>} path="*"/>
+                 <Route element={<Admin/>} path="/admin"/>
             </Routes>
           </ThemeProvider>
   );

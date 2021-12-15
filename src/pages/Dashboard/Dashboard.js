@@ -1,6 +1,5 @@
 import {useCallback, useRef, useState, useMemo} from 'react'
 import Table from "../../components/Table/Table";
-import style from "./Dashboard.module.scss"
 import {SelectColumnFilter} from "../../components/Table/Filter";
 import dayjs from "dayjs";
 import Info from "../../components/Info/Info";
@@ -12,6 +11,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
 import {CssBaseline} from "@material-ui/core";
+import {red} from "@material-ui/core/colors";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from "../../components/Header/Header";
 
@@ -54,7 +54,7 @@ function Dashboard() {
             },
             {
                 Header:'Номер контракта',
-                accessor:'contract_id'
+                accessor:d=>d.contract_id
             },
             {
                 Header: 'Дата',
@@ -82,13 +82,13 @@ function Dashboard() {
             },
             {
                 Header:"Отделение",
-                accessor: "branch",
+                accessor: d=>d.branch,
                 Filter:SelectColumnFilter,
                 filter:'equals'
             },
             {
                 Header:"Организация",
-                accessor: "organization"
+                accessor: d=>d.organization
             },
             {
                 Header:"Тип",
@@ -139,6 +139,16 @@ function Dashboard() {
                     columns={columns}
                     data={data}
                     fetchData={fetchData}
+                    getRowProps={row=>({
+                        style:{
+                            background:dayjs(row.original.ended).isBefore(dayjs(new Date())) ? red[300] : '',
+                        }
+                    })}
+                    getCellProps={cell=>({
+                        style: {
+                            color: dayjs(cell.row.original.ended).isBefore(dayjs(new Date())) ? red[50] : '',
+                        }
+                    })}
                 />
             </div>
         </AppContext.Provider>

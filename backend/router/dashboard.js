@@ -7,6 +7,8 @@ const csvParser = require('csv-parser')
 const router = Router();
 const dashboardController = require('../controller/dashboardController');
 const protect = require('../middleware/authJWT')
+const storageConfig = require('../middleware/storage');
+const multer = require('multer');
 
 router.get('/',protect,dashboardController.dataContract);
 router.get('/get-branch',async (req,res)=>{
@@ -75,7 +77,8 @@ router.post('/showCount',async(req,res)=>{
             })
             ///
 })
-router.post('/add-patient',dashboardController.addPatient)
+router.post('/add-patient',dashboardController.addPatient);
+router.post('/upload-file',multer({storage:storageConfig}).single('file'),dashboardController.addContractFromXlsx);
 /// переделать позже
 router.post('/showAllService',async(req,res)=>{
     const {id} = req.body;

@@ -4,6 +4,9 @@ const Branch = require('../models/Branch');
 const Patient = require('../models/Patient');
 const {Op} = require('sequelize');
 const dayjs = require('dayjs');
+const xlsx = require('xlsx');
+const fs = require('fs');
+const path = require('path');
 
 class DashboardController {
     async dataContract(req, res, next) {
@@ -155,6 +158,16 @@ class DashboardController {
             return res.send(e).status(500)
         }
     }
+    async addContractFromXlsx(req,res,next){
+        try{
+            const fileXlsx = fs.readFileSync(`./upload/${req.file.filename}`);
+             const workbook = xlsx.read(fileXlsx,{type:"buffer"});
+            console.log(workbook.Sheets)
+        }catch(e) {
+            console.log(e)
+        }
+    }
+
 }
 
 

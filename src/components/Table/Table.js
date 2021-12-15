@@ -15,9 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select"
 import TextField from "@mui/material/TextField"
 import {CircularProgress} from "@mui/material";
-import style from './Table.module.scss'
+import {Checkbox,Grid} from "@material-ui/core";
+import {TableCheckboxes} from "./TableCheckboxes";
 
-function TableDashboard({columns,renderRowSubComponent,data,fetchData}){
+const defaultPropGetter = ()=>({});
+
+function TableDashboard({columns,renderRowSubComponent,data,fetchData,getRowProps = defaultPropGetter,getCellProps = defaultPropGetter}){
     const controlledPageCount = useSelector(state=>state.dashboard.count);
     const loading = useSelector((state)=>state.dashboard.loading);
 const {
@@ -36,7 +39,9 @@ const {
     nextPage,
     previousPage,
     setPageSize,
-    setGlobalFilter
+    setGlobalFilter,
+    getToggleHideAllColumnsProps,
+    allColumns
 } = useTable(
     {
         columns,
@@ -68,6 +73,22 @@ const {
 
     return(
      <>
+     <Grid container direction="row" justifyContent="flex-start">
+         <Grid item>
+             <label>
+                 <TableCheckboxes {...getToggleHideAllColumnsProps()}/>
+                 Скрыть все
+             </label>
+         </Grid>
+         <Grid item>
+             {allColumns.slice(1,10).map(column=>(
+                     <label key={column.id}>
+                         <Checkbox  {...column.getToggleHiddenProps()}/>
+                         {column.id}
+                     </label>
+             ))}
+         </Grid>
+     </Grid>
     <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
     <TableContainer component={Paper}>
      <Table {...getTableProps()} size={"small"} sx={{minWidth:600}}>
@@ -89,12 +110,12 @@ const {
          {
              page.map((row)=>{
                  prepareRow(row)
-                 const rowProps = row.getRowProps();
+                 const rowProps = row.getRowProps(getRowProps(row));
                  return(
                      <React.Fragment key={rowProps.key}>
                          <TableRow {...rowProps}>
                              {row.cells.map(cell=>{
-                                 return  <TableCell {...cell.getCellProps()}>
+                                 return  <TableCell {...cell.getCellProps(getCellProps(cell))}>
                                      {cell.render('Cell')}
                                  </TableCell>
                              }

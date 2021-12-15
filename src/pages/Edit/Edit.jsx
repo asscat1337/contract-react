@@ -4,9 +4,10 @@ import {useDispatch,useSelector} from "react-redux";
 import {actionsAddService,actionGetCurrentService,actionDeleteService,actionEditService} from "../../store/actions/actionsService";
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
-import styles from './Edit.module.scss';
 import {CssBaseline,Grid,Paper,Box,Button} from "@mui/material";
 import FormContract from "../../components/Form/FormContract";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 function Edit(){
@@ -75,12 +76,23 @@ function Edit(){
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
                         <Paper key={item.services_id}>
-                            <div>{item.service_name}</div>
-                            <div>{item.service_count}</div>
-                            <div>{item.service_cost}</div>
+                            <div>Название услуги:{item.service_name}</div>
+                            <div>Количество:{item.service_count}</div>
+                            <div>Стоимость услуги:{item.service_cost}</div>
                             <div>
-                                <button onClick={()=>onDeleteService(item)}>Удалить</button>
-                                <button onClick={()=>onEditService(item)}>Редактировать</button>
+                                <Button
+                                    onClick={()=>onDeleteService(item)}
+                                    color="error"
+                                    startIcon={<DeleteForeverIcon/>}
+                                >
+                                    Удалить
+                                </Button>
+                                <Button
+                                    onClick={()=>onEditService(item)}
+                                    startIcon={<EditIcon/>}
+                                >
+                                    Редактировать
+                                </Button>
                             </div>
                         </Paper>
                     ))
