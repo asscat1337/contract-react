@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
-import {TextField,Button} from '@material-ui/core'
+import {TextField,Grid} from '@material-ui/core'
 import {useEffect} from 'react'
 import {useForm} from "react-hook-form";
 import {useSelector} from "react-redux";
 import * as yup from 'yup'
-import {Alert} from "@material-ui/core";
 import CustomSnackBar from "../Snackbar/SnackBar";
 import {yupResolver} from "@hookform/resolvers/yup";
 
@@ -48,7 +47,7 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     }
 
 return(
-    <>
+    <Grid container direction="column" justifyContent="center" alignItems="center" columnSpacing={{xs:1,sm:2,md:3}}>
         {open &&
             <CustomSnackBar
                 open
@@ -57,25 +56,32 @@ return(
                 message={message}
             />
         }
-    <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-            type="text"
-            label="Название услуги"
-            {...register('serviceName')}
-        />
-        <TextField
-            type="text"
-            label="Стоимость"
-            {...register('serviceCost')}
-        />
-        <TextField
-            type="text"
-            label="Количество"
-            {...register('serviceCount')}
-        />
-        {children}
-    </form>
-        </>
+        <Grid item>
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Название услуги"
+                    {...register('serviceName')}
+                />
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Стоимость"
+                    {...register('serviceCost')}
+                />
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Количество"
+                    {...register('serviceCount')}
+                />
+                <Grid item>
+                    {children}
+                </Grid>
+            </form>
+        </Grid>
+        </Grid>
 )
 }
 

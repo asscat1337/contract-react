@@ -8,8 +8,8 @@ import Select from 'react-select'
 import NumberFormat from "react-number-format";
 import {getDepartment} from "../../store/actions/actionsDepartment";
 import {getOrganization} from "../../store/actions/actionsOrganization";
+import {actionGetType} from "../../store/actions/actionsTypes";
 import {actionAddDashboard,actionEditContract,actionAddContractFromFile} from "../../store/actions/actionsDashboard";
-import {Input,InputLabel} from "@material-ui/core";
 
 
 const NumberFormatCustom = React.forwardRef((props,ref)=>{
@@ -35,7 +35,7 @@ const NumberFormatCustom = React.forwardRef((props,ref)=>{
 
 
 function FormContract({editContract = {},editable = false}){
-    const [onFile,onChangeFile] = useState(null)
+    // const [onFile,onChangeFile] = useState(null)
     const schema = yup.object().shape({
          // костыль
          sum:editable ? yup.number() : yup.number().required('Введите сумма'),
@@ -44,7 +44,7 @@ function FormContract({editContract = {},editable = false}){
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
-          type:yup.boolean()
+         type:editable ? yup.string() : yup.string().required()
         //
 
     });
@@ -54,19 +54,16 @@ function FormContract({editContract = {},editable = false}){
     const dispatch = useDispatch();
     const organization = useSelector(state=>state.organization.organization);
     const department = useSelector(state=>state.department.department);
+    const type = useSelector(state=>state.type.types);
 
-    if(!organization.length && !department.length){
-        dispatch(getDepartment());
-        dispatch(getOrganization());
-    }
 
-    const onChange=({target})=>{
-        onChangeFile(target.files[0])
-    };
-
-    const onClickAddFiles=()=>{
-        dispatch(actionAddContractFromFile(onFile))
-    }
+    // const onChange=({target})=>{
+    //     onChangeFile(target.files[0])
+    // };
+    //
+    // const onClickAddFiles=()=>{
+    //     dispatch(actionAddContractFromFile(onFile))
+    // }
 
     const onSubmitForm=(data)=>{
        if(editable){
@@ -77,10 +74,10 @@ function FormContract({editContract = {},editable = false}){
             branch:data.department ?? editContract.branch,
             ended:data.ended ?? editContract.ended,
             rendering: data.rendering ?? editContract.rendering,
-            sum:data.sum ?? editContract.sum
+            sum:data.sum ?? editContract.sum,
+            type:data.type ?? editContract.type
         };
-       console.log(transformedEdit)
-         dispatch(actionEditContract(transformedEdit))
+          dispatch(actionEditContract(transformedEdit))
        }else{
            dispatch(actionAddDashboard(data));
            reset({})
@@ -99,6 +96,7 @@ function FormContract({editContract = {},editable = false}){
                             error={!!errors.rendering}
                             id="rendered"
                             type="date"
+                            label="Дата заключения"
                             onChange={date=>onChange(date)}
                              defaultValue={editContract.rendering || ""}
                             InputLabelProps={{
@@ -115,6 +113,7 @@ function FormContract({editContract = {},editable = false}){
                             error={!!errors.ended}
                             id="ended"
                             type="date"
+                            label="Дата окончания"
                             onChange={date=>onChange(date)}
                             defaultValue={editContract.ended || "" }
                             InputLabelProps={{
@@ -192,50 +191,20 @@ function FormContract({editContract = {},editable = false}){
                 </Grid>
                 <Grid item>
                     <h5>Выберите тип</h5>
-                    <FormGroup>
-                        <FormControlLabel control={
-                            <Controller
-                                control={control}
-                                name="type"
-                                render={({field:{onChange}})=>(
-                                    <Checkbox
-                                        onChange={e=>onChange(e.target.checked)}
-                                    />
-                                )}
-                            />
-                        }
-                        label="Контракт"
+                  <Controller
+                    control={control}
+                    name="type"
+                    render={({field:{onChange}})=>(
+                        <Select
+                            placeholder="Выберите тип..."
+                            options={type}
+                            onChange={v=>onChange(v.label)}
                         />
-                        <FormHelperText>Если не выбран тип,то по умолчанию будет "Договор"</FormHelperText>
-                    </FormGroup>
+                    )}
+                  />
                 <Button variant="outlined" type="submit" onSubmit={onSubmitForm}>
                     {editable ? " Редактировать" : "Добавить"}
                 </Button>
-                    {/*<>*/}
-                    {/*    <InputLabel htmlFor="import-button">*/}
-                    {/*       <Input*/}
-                    {/*            id="import-button"*/}
-                    {/*            inputProps={{*/}
-                    {/*                accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"*/}
-                    {/*            }}*/}
-                    {/*            style={{display:"none"}}*/}
-                    {/*            onChange={onChange}*/}
-                    {/*            type="file"*/}
-                    {/*       />*/}
-                    {/*       <Button*/}
-                    {/*        color="secondary"*/}
-                    {/*        variant="contained"*/}
-                    {/*        component="span"*/}
-                    {/*       >*/}
-                    {/*           Загрузить файл...*/}
-                    {/*       </Button>*/}
-
-                    {/*        <Button variant="outlined" onClick={onClickAddFiles}>*/}
-                    {/*            Загрузить*/}
-                    {/*        </Button>*/}
-
-                    {/*    </InputLabel>*/}
-                    {/*</>*/}
             </Grid>
             </form>
         </Grid>

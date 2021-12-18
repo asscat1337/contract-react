@@ -38,9 +38,9 @@ function Edit(){
     return (
         <Box sx={{flexGrow:1}}>
             <h5>Форма редактирования контрактов и услуг</h5>
-        <Grid container spacing={10} direction="row" justifyContent="space-around" alignItems="center">
+        <Grid container direction="row" justifyContent="space-around" alignItems="center">
             <CssBaseline/>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
                 {
                     open && <Modal
                         onClose={setOpen}
@@ -60,18 +60,28 @@ function Edit(){
                     </Modal>
                 }
             {!open &&
-                <FormService onSubmitForm={onSubmitForm}>
-                    <Button type="submit">
-                       Добавить услугу
-                    </Button>
-                </FormService>
+                <Box sx={{height:350}}>
+                    <Paper elevation={5} sx={{p:1}}>
+                        <h4>Форма добавления услуги</h4>
+                        <FormService onSubmitForm={onSubmitForm}>
+                            <Button type="submit" variant="outlined">
+                                Добавить услугу
+                            </Button>
+                        </FormService>
+                    </Paper>
+                </Box>
             }
-            <FormContract
-                editContract={editContract}
-                editable={true}
-            />
+            <Box sx={{height:550}}>
+                <Paper elevation={5} sx={{p:4}}>
+                    <h4>Форма редактирования контракт/договора </h4>
+                    <FormContract
+                        editContract={editContract}
+                        editable={true}
+                    />
+                </Paper>
+            </Box>
             </Grid>
-            <Grid>
+            <Grid sx={{height:'130vh'}}>
                 <h5>Список услуг</h5>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(

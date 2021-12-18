@@ -1,12 +1,12 @@
 const Contract = require('../models/Contract');
 const Service = require('../models/Services');
 const Branch = require('../models/Branch');
+const Type = require('../models/Type');
 const Patient = require('../models/Patient');
 const {Op} = require('sequelize');
 const dayjs = require('dayjs');
 const xlsx = require('xlsx');
 const fs = require('fs');
-const path = require('path');
 
 class DashboardController {
     async dataContract(req, res, next) {
@@ -165,6 +165,20 @@ class DashboardController {
             console.log(workbook.Sheets)
         }catch(e) {
             console.log(e)
+        }
+    }
+    async getType(req,res,next){
+        try{
+            const getType = await Type.findAll()
+            const transformedType = getType.map(item=>{
+                return {
+                    value:item.type_id,
+                    label:item.title
+                }
+            })
+            return res.status(200).json(transformedType)
+        }catch (e) {
+            return res.status(500).json({message:e})
         }
     }
 

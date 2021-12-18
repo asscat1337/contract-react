@@ -77,6 +77,7 @@ router.post('/showCount',async(req,res)=>{
             })
             ///
 })
+router.get('/get-type',dashboardController.getType)
 router.post('/add-patient',dashboardController.addPatient);
 router.post('/upload-file',multer({storage:storageConfig}).single('file'),dashboardController.addContractFromXlsx);
 /// переделать позже

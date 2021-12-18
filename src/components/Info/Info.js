@@ -7,7 +7,7 @@ import {action3} from "../../store/actions/action3";
 import AppContext from "../../hooks/context";
 import dayjs from "dayjs";
 
-function Info({currentId}){
+function Info({currentId,setCurrentId}){
     const dispatch = useDispatch()
     const [patientId,testCurrentId] = useState(null)
     const state = useSelector((state)=>state.patient.patient);
@@ -24,6 +24,7 @@ function Info({currentId}){
 
     const closeInfo=()=>{
         setOpen(false)
+        setCurrentId(null)
     }
     return (
         <>

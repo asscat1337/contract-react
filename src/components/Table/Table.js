@@ -17,10 +17,18 @@ import TextField from "@mui/material/TextField"
 import {CircularProgress} from "@mui/material";
 import {Checkbox,Grid} from "@material-ui/core";
 import {TableCheckboxes} from "./TableCheckboxes";
+import AlertDialog from "../Modal/AlertDialog";
 
 const defaultPropGetter = ()=>({});
 
-function TableDashboard({columns,renderRowSubComponent,data,fetchData,getRowProps = defaultPropGetter,getCellProps = defaultPropGetter}){
+function TableDashboard({
+                            columns,
+                            renderRowSubComponent,
+                            data,
+                            fetchData,
+                            getRowProps = defaultPropGetter,
+                            getCellProps = defaultPropGetter
+}){
     const controlledPageCount = useSelector(state=>state.dashboard.count);
     const loading = useSelector((state)=>state.dashboard.loading);
 const {
@@ -65,8 +73,7 @@ const {
     const onChangeInput=(event)=>{
         const page = event.target.value ? Number(event.target.value) - 1 : 0
         gotoPage(page)
-    }
-
+    };
     if(loading){
         return <CircularProgress color="success"/>
     }

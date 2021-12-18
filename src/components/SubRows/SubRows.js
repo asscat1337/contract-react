@@ -3,7 +3,7 @@ import {useTable} from 'react-table'
 import action2 from "../../store/actions/action2";
 import {useMemo,useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {TableCell,TableBody,TableRow,TableHead,TableContainer} from "@mui/material";
+import {TableCell,TableBody,TableRow,TableHead,TableContainer,Table} from "@mui/material";
 import styles from './SubRows.module.scss'
 
 
@@ -80,6 +80,7 @@ function SubRows({current,setModal,testCurrentId}) {
     return (
         <>
                 <TableContainer {...getTableProps()} className={styles.service}>
+                    <Table>
                     <TableHead>
                     {headerGroups.map(headerGroup=>(
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -103,6 +104,7 @@ function SubRows({current,setModal,testCurrentId}) {
                         })
                     }
                     </TableBody>
+                    </Table>
                 </TableContainer>
         </>
     )

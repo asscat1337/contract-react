@@ -9,28 +9,28 @@ import {addService,
 
 function actionsAddService(current){
         return dispatch=>{
-            axios.post('http://localhost:3005/dashboard/addService',current)
+            axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/addService`,current)
                 .then(({data})=>dispatch(addService(data)))
                 .catch(error=>dispatch(errorService(error)))
         }
 }
 function actionGetCurrentService(id){
     return dispatch=>{
-        axios.get(`http://localhost:3005/dashboard/getService/${id}`)
+        axios.get(`${process.env.REACT_APP_BASE_URL}/dashboard/getService/${id}`)
             .then(({data})=>dispatch(showEditService(data)))
             .catch(error=>dispatch(errorService(error)))
     }
 }
 function actionDeleteService(id){
     return dispatch=>{
-        axios.post(`http://localhost:3005/dashboard/delete-service`,{id})
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,{id})
             .then(()=>dispatch(deleteService(id)))
             .catch(error=>dispatch(errorService(error)))
     }
 }
 function actionEditService(data){
     return dispatch=>{
-        axios.post('http://localhost:3005/dashboard/update-service',data)
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/update-service`,data)
             .then(()=>dispatch(editService(data)))
             .catch(error=>dispatch(errorService(error)))
     }

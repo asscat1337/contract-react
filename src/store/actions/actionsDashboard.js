@@ -7,7 +7,7 @@ import {
     getDataService,
     loadDataDashboard,
     editContract,
-    addContractFromFile
+    editDataContract
 } from "../reducers/reducer";
 
 function actionGetDashboard({page,size,branch,roles}) {
@@ -64,8 +64,8 @@ function actionEditDataContract(current){
 }
 function actionEditContract(data){
     return dispatch=>{
-        axios.post('http://localhost:3005/dashobard/edit-contract',data)
-            .then(({data})=>dispatch)
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/edit-contract`,data)
+            .then(({data})=>dispatch(editDataContract(data)))
             .catch(error=>dispatch(errorDashboard(error)))
     }
 }
@@ -74,7 +74,7 @@ function actionAddContractFromFile(data){
     const formData = new FormData()
     formData.append('file',data);
     return dispatch=>{
-        axios.post('http://localhost:3005/dashboard/upload-file',formData)
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file`,formData)
             .then(({data})=>console.log(data))
     }
 }

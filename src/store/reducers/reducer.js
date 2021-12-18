@@ -11,7 +11,8 @@ import {
     DELETE_SERVICE,
     EDIT_SERVICE,
     EDIT_CONTRACT,
-    UPLOAD_CONTRACT
+    UPLOAD_CONTRACT,
+    GET_EDIT_CONTRACT,
 } from "../types";
 
 const initialState = {
@@ -131,14 +132,24 @@ function reducer(state = initialState,action){
                 })
             }
         }
-        case EDIT_CONTRACT :
+        case GET_EDIT_CONTRACT :
             return {
                 ...state,
                 editContract:action.payload
             }
-        case UPLOAD_CONTRACT :
+        case EDIT_CONTRACT :
             return {
-
+                ...state,
+                data:state.data.map(item=>{
+                    if(item.contract_id === action.payload.id){
+                        return {
+                            ...item,
+                            ...action.payload
+                        }
+                    }else{
+                        return item
+                    }
+                })
             }
         default : return state
     }
@@ -154,7 +165,8 @@ export const errorService=(payload)=>({type:ERROR_SERVICE,payload});
 export const showEditService=(payload)=>({type:SHOW_SERVICE,payload});
 export const deleteService=(payload)=>({type:DELETE_SERVICE,payload});
 export const editService=(payload)=>({type:EDIT_SERVICE,payload});
-export const editContract=payload=>({type:EDIT_CONTRACT,payload});
-export const addContractFromFile=(payload)=>({type:UPLOAD_CONTRACT,payload})
+export const editContract=payload=>({type:GET_EDIT_CONTRACT,payload});
+export const addContractFromFile=(payload)=>({type:UPLOAD_CONTRACT,payload});
+export const editDataContract=(payload)=>({type:EDIT_CONTRACT,payload});
 
 export default reducer

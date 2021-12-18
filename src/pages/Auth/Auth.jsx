@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {useForm} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver}  from "@hookform/resolvers/yup";
-import {Grid, Paper,TextField,Button,Checkbox,FormControlLabel,FormGroup,Stack} from "@mui/material";
+import {Grid, Paper,TextField,Button,Checkbox,FormControlLabel,FormGroup,Stack,CssBaseline} from "@mui/material";
 import {useDispatch,useSelector} from "react-redux";
 import {actionsLoginUser} from "../../store/actions/actionsAuthUser";
 import FormResetPassword from "../../components/Form/FormResetPassword";
@@ -53,6 +53,8 @@ function Auth(){
     }
 
     return(
+        <>
+            <CssBaseline/>
         <Grid>
             {message &&
             <CustomSnackBar
@@ -108,6 +110,7 @@ function Auth(){
                 </Grid>
             </Paper>
         </Grid>
+            </>
     )
 }
 

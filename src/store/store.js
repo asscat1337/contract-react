@@ -8,6 +8,7 @@ import patientReducer from "./reducers/patientReducer";
 import organizationReducer from "./reducers/organizationReducer";
 import departmentReducer from "./reducers/departmentReducer";
 import authReducer from './reducers/AuthReducer'
+import typeReducer from "./reducers/typeReducer";
 
 const persistConfig = {
     key:'root',
@@ -19,7 +20,8 @@ const rootReducer=combineReducers({
     patient:patientReducer,
     organization:organizationReducer,
     department:departmentReducer,
-    auth:authReducer
+    auth:authReducer,
+    type:typeReducer
 })
 
 const persistedReducer = persistReducer(persistConfig,rootReducer);

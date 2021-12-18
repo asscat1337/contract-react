@@ -6,8 +6,9 @@ import axios from "axios";
 
 function actionsLoginUser(user){
     return dispatch=>{
+        console.log(process.env)
         dispatch(loadAuthUser())
-        axios.post('http://localhost:3005/auth/login',user)
+        axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`,user)
             .then(({data})=>{
                 dispatch(loginUser(data))
                 sessionStorage.setItem('auth',data.success);
@@ -24,7 +25,7 @@ function actionsLogoutUser(){
 }
 function actionsResetPassword(data){
         return dispatch=>{
-            axios.post('http://localhost:3005/auth/reset-password',data)
+            axios.post(`${process.env.REACT_APP_BASE_URL}/auth/reset-password`,data)
                 .then(({data})=>dispatch(resetPassword(data)))
                 .catch(({data})=>dispatch(errorUser(data)))
         }

@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState, useMemo} from 'react'
+import React, {useCallback, useRef, useState, useMemo} from 'react'
 import Table from "../../components/Table/Table";
 import {SelectColumnFilter} from "../../components/Table/Filter";
 import dayjs from "dayjs";
@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import {CssBaseline} from "@material-ui/core";
 import {red} from "@material-ui/core/colors";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Header from "../../components/Header/Header";
+import AlertDialog from "../../components/Modal/AlertDialog";
 
 function Dashboard() {
     const dispatch = useDispatch();
@@ -21,6 +21,7 @@ function Dashboard() {
     const branch = useSelector((state)=>state.auth.user.branch);
     const data = useSelector((state)=>state.dashboard.data);
     const [open,setOpen] = useState(false);
+    const [confirmOpen,setConfirmOpen] = useState(false)
     const [currentId,setCurrentId] = useState(null);
     const fetchIdRef = useRef(0);
 
@@ -40,6 +41,8 @@ function Dashboard() {
     const onEditContract=(row)=>{
         dispatch(actionEditDataContract(row.original))
     }
+
+
     const columns = useMemo(()=>
         [
             {
@@ -92,7 +95,7 @@ function Dashboard() {
             },
             {
                 Header:"Тип",
-                accessor: (d)=>Number(d.type) === 1 ? "Контракт" : "Договор",
+                accessor: d=>d.type,
                 Filter:SelectColumnFilter,
                 filter:'equals'
             },
@@ -104,7 +107,7 @@ function Dashboard() {
                          <>
                              {roles === 2 && (
                                  <>
-                                 <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onDeleteContract(row.original)}>
+                                 <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onOpenConfirm(row.original)}>
                                      Удалить
                                  </Button>
                                  <Button variant="outlined" size="small" startIcon={<EditIcon/>} onClick={()=>onEditContract(row)}>
@@ -121,9 +124,20 @@ function Dashboard() {
         setOpen(true)
         setCurrentId(row.original.contract_id)
     }
-    const onDeleteContract=(current)=>{
-        dispatch(actionDeleteContract(current.contract_id))
+
+    const onOpenConfirm=(current)=>{
+        setConfirmOpen(true);
+        setCurrentId(current.contract_id)
+    }
+
+    const onCloseConfirm=()=>{
+        setConfirmOpen(false)
     };
+
+    const onConfirmDelete=()=>{
+        dispatch(actionDeleteContract(currentId));
+        setCurrentId(null)
+    }
 
     return(
         <AppContext.Provider value={{setOpen,open}}>
@@ -133,7 +147,16 @@ function Dashboard() {
                 {open &&
                 <Info
                     currentId={currentId}
+                    setCurrentId={setCurrentId}
                 />
+                }
+                {
+                    confirmOpen &&
+                    <AlertDialog
+                        open={confirmOpen}
+                        onClose={onCloseConfirm}
+                        onConfirmDelete={onConfirmDelete}
+                    />
                 }
                 <Table
                     columns={columns}

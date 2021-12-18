@@ -5,7 +5,7 @@ import axios from "axios";
 
 function getDepartment() {
     return dispatch=>{
-        axios.get('http://localhost:3005/dashboard/get-branch')
+        axios.get(`${process.env.REACT_APP_BASE_URL}/dashboard/get-branch`)
             .then(({data})=>dispatch(showDepartment(data)))
             .catch(error=>dispatch(errorDepartment(error)))
     }
