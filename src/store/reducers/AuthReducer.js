@@ -3,7 +3,8 @@ import {LOGIN_USER,
     ERROR_AUTH,
     LOAD_AUTH,
     LOGOUT_USER,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    GET_ROLE
 } from "../types";
 
 
@@ -12,6 +13,7 @@ const initialState={
     auth:false,
     role:'',
     loading:true,
+    roles:[],
     message:''
 };
 
@@ -25,7 +27,9 @@ function AuthReducer(state=initialState,action){
                 error: ''
             };
         case REGISTER_USER :{
-            return
+            return {
+                user:action.payload
+            }
         }
         case LOAD_AUTH :
             return {
@@ -50,6 +54,11 @@ function AuthReducer(state=initialState,action){
                 ...state,
                 message:action.payload
             }
+        case GET_ROLE :
+            return {
+                ...state,
+                roles:action.payload
+            }
         default : return state
 
     }
@@ -60,5 +69,7 @@ export const errorUser=(payload)=>({type:ERROR_AUTH,payload});
 export const loadAuthUser=()=>({type:LOAD_AUTH});
 export const logoutUser=()=>({type:LOGOUT_USER});
 export const resetPassword=(payload)=>({type:RESET_PASSWORD,payload});
+export const registerUser=(payload)=>({type:REGISTER_USER,payload});
+export const getRole=(payload)=>({type:GET_ROLE,payload});
 
 export default AuthReducer

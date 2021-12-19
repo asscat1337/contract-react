@@ -63,6 +63,46 @@ class AuthController {
         }
 
     }
+    async registerUser(req,res,next){
+        try{
+            const {email,password,role,branch,birthday,fio} = req.body
+            const hashedPassword = await bcrypt.hash(password,3)
+            const candidate = await Users.findAll({where:{
+                login:email
+                }});
+            console.log(candidate)
+            if(candidate.length){
+                return res.status(400).json({message:'Пользователь уже существует'})
+            }
+                await Users.create({
+                    login:email,
+                    password:hashedPassword,
+                    birthday,
+                    fio,
+                    roleRolesId:role,
+                    branchBranchId:branch
+                }).then(()=>res.status(200).json({message:'Пользователь добавлен'}))
+        }catch (e) {
+            console.log(e)
+            return res.status(500).json({error:'Произошла ошибка'})
+        }
+    }
+    async getRole(req,res,next){
+        try {
+            const getRoleFromRequest =  await Roles.findAll()
+            const transformedRoles = getRoleFromRequest.map(item=>{
+                return{
+                    value:item.roles_id,
+                    label:item.description
+                }
+            })
+
+            return res.status(200).json(transformedRoles)
+
+        }catch (e) {
+            return res.status(500).json({error:'Произошла ошибка'})
+        }
+    }
 }
 
 

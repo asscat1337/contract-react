@@ -4,23 +4,9 @@ const config = require('../core/config')
 const connection = mysql.createConnection(config).promise();
 const bcrypt = require('bcrypt');
 const router = Router();
+const adminController = require('../controller/adminController')
 
-router.get('/',async (req,res)=>{
-    await connection.query('SELECT * from users')
-        .then(async(result)=>{
-            await connection.query('SELECT * from branch')
-            .then(result1=>{
-                res.render('admin',{
-                    data:result[0],
-                    rolesId:req.session.rolesId,
-                    isAuth:req.session.isAuth,
-                    branch:result1[0],
-                    css:['lib/materialize.min.css'],
-                    js:['admin.js','lib/materialize.min.js']
-                })
-            })
-        })
-});
+router.get('/get-users',adminController.getUsers);
 router.post('/registerUser',async(req,res)=>{
     const {login,password,birthday,fio,roles,branch_id} = req.body;
     const hashed = await bcrypt.hash(password,10);
@@ -87,9 +73,5 @@ router.post('/edit-user',async(req,res)=>{
             .then(()=>res.json({'status':'Данные обновились'}))
     }
 })
-router.post('/delete-user',async(req,res)=>{
-    const {id} = req.body
-    await connection.query(`DELETE from users WHERE user_id='${id}'`)
-        .then(()=>res.json({'status':'Пользователь удален'}))
-})
+router.delete('/delete-user',adminController.deleteUser)
 module.exports = router

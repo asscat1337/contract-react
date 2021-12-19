@@ -16,6 +16,7 @@ router.get('/get-branch',async (req,res)=>{
         .then(([rows])=>{
             const mappedDepartment = rows.map(row=>{
                 return {
+                    value:row.branch_id,
                     label:row.description
                 }
             })

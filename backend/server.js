@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const app = express();
-
+const path = require('path');
 
 app.use(session({
     secret:"secret key",
@@ -12,16 +12,27 @@ app.use(session({
     saveUninitialized: true,
 }))
 
+app.use(express.static(path.resolve(__dirname,'../build')));
+
+
+
+
 const port = process.env.PORT ?? 3005;
-app.use(express.json())
-app.use(cors())
-app.use(express.json({extended: true}))
+app.use(express.json());
+app.use(cors());
+app.use(express.json({extended: true}));
 
 const auth = require('./router/auth');
-const dashboard = require('./router/dashboard')
+const dashboard = require('./router/dashboard');
+const admin = require('./router/admin');
 
 app.use('/Auth',auth)
-app.use('/dashboard',dashboard)
+app.use('/dashboard',dashboard);
+app.use('/admin',admin)
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'../build','index.html'))
+})
 app.listen(port,()=>{
     console.log(`Listen in ${port}`)
 })
