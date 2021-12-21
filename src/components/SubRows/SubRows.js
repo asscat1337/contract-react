@@ -50,11 +50,11 @@ function SubRows({current,setModal,testCurrentId}) {
             Cell:({row})=>(
                 <>
                     <a href="#" onClick={()=>onShowModal(row)}>Показать пациентов</a>
-                    {roles == 1 && (
-                        <Link to={`/patient/${row.original.services_id}`}>
-                            Добавить пациента
-                        </Link>
-                    )}
+                    {Number(roles) === 1 && row.original.service_left !== 0 ? (
+                                <Link to={`/patient/${row.original.services_id}`}>
+                                    Добавить пациента
+                                </Link>
+                    ) : null}
                 </>
             )
         }

@@ -5,7 +5,7 @@ const Type = require('../models/Type');
 const Patient = require('../models/Patient');
 const {Op} = require('sequelize');
 const dayjs = require('dayjs');
-const xlsx = require('xlsx');
+const csvParser = require('csv-parser');
 const fs = require('fs');
 
 class DashboardController {
@@ -76,6 +76,11 @@ class DashboardController {
     async addService(req,res,next){
         try{
             const {id} = req.body;
+            const findContract = await Contract.findAll({
+                where:{
+                    contract_id:id
+                }
+            })
             const {serviceCount,serviceCost,serviceName} = req.body.data;
 
             await Service.create({
@@ -84,7 +89,11 @@ class DashboardController {
                 service_count:serviceCount,
                 agreement_id: id,
                 service_left: serviceCount
-            }).then(data=>res.json(data))
+            })
+                .then(()=>Contract.update({
+                    sum_left:findContract.dataValues.sum_left - (serviceCount*serviceCost)
+                }))
+                .then(data=>res.json(data))
         }catch (e) {
             return res.send(e).status(500)
         }
@@ -116,6 +125,11 @@ class DashboardController {
     async editService(req,res,next){
         try{
             const {serviceName,serviceCost,serviceCount,id} = req.body;
+            const findContract = await Contract.findAll({
+                where:{
+                    contract_id:id
+                }
+            })
             await Service.update({
                 service_name:serviceName,
                 service_cost:serviceCost,
@@ -124,7 +138,10 @@ class DashboardController {
             },{where:{
                 services_id:id
                 }})
-                .then(res.send().status(200))
+                .then(()=>Contract.update({
+                    sum_left:findContract.dataValues.sum_left - (serviceCost*serviceCount)
+                }))
+                .then(()=>res.status(200).json({message:'Услуга добавлена'}))
         }catch (e) {
             return res.send(e).status(500)
         }
@@ -132,6 +149,9 @@ class DashboardController {
     async addPatient(req,res,next){
         try{
             const {id,fio,birthday} = req.body;
+            const findCurrentService = await Service.findOne({where:{
+                services_id:id
+                }});
             await Patient.create(
                 {
                     fio,
@@ -139,6 +159,11 @@ class DashboardController {
                     date_added: dayjs().format("YYYY-MM-DD"),
                     service_id:id
                 })
+                .then(()=>Service.update({service_left:findCurrentService.service_left-1},{
+                    where:{
+                        services_id:id
+                    }
+                }))
                 .then(()=>res.status(200).json({'message':'Пациент добавлен'}))
                 .catch(error=>res.status(500).json({'message':error}))
 
@@ -148,12 +173,13 @@ class DashboardController {
     }
     async editContract(req,res,next){
         try {
-            const {id} = req.body
+            const {id} = req.body;
             await Contract.update(req.body,{
                 where:{
                     contract_id:id
                 }
-            }).then(()=>res.status(200).send())
+            })
+                .then(()=>res.status(200).send())
         }catch (e) {
             return res.send(e).status(500)
         }
@@ -179,6 +205,25 @@ class DashboardController {
             return res.status(200).json(transformedType)
         }catch (e) {
             return res.status(500).json({message:e})
+        }
+    }
+    async uploadFile(req,res,next){
+        try{
+            const result = []
+            const {path} = req.file
+            fs.createReadStream(path)
+                .pipe(csvParser())
+                .on('data',(data)=>result.push(data))
+                .on('end',()=>{
+                    result.map(async (item)=>{
+                        await Branch.create({
+                            description:item.otd
+                        })
+                    })
+                }).then(()=>res.status(200).json({message:'Файл загружен успешно'}))
+        }catch (e) {
+            console.log(e)
+            return res.status(500).json(e)
         }
     }
 

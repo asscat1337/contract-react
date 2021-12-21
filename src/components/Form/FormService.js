@@ -12,7 +12,7 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     const [message,setMessage] = useState('')
     const [error,setError] = useState('')
     const [open,setOpen] = React.useState(false);
-    const editContract = useSelector(state=>state.dashboard.editContract.sum)
+    const editContract = useSelector(state=>state.dashboard.editContract.sum_left)
     const schema = yup.object().shape({
         serviceName:yup.string().required(),
         serviceCost: yup.number().required(),

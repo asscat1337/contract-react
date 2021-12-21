@@ -17,6 +17,10 @@ const Contract = connection.define('contract',{
         type:DataTypes.INTEGER,
         allowNull:false
     },
+    sum_left:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+    },
     ended:{
         type:DataTypes.DATEONLY,
         allowNull:false
@@ -44,7 +48,7 @@ const Contract = connection.define('contract',{
 },{
     freezeTableName:true,
     timestamps:false
-})
+});
 
-module.exports = Contract
+module.exports = Contract;
 

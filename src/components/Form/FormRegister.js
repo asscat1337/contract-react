@@ -13,7 +13,7 @@ import React from "react";
 function FormRegister(){
     const dispatch = useDispatch()
     const branch = useSelector(state=>state.department.department);
-    const role = useSelector(state=>state.auth.roles)
+    const role = useSelector(state=>state.auth.roles);
     const schema = yup.object().shape({
         email:yup.string().required(),
         password:yup.string().required(),

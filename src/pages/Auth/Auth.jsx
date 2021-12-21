@@ -18,9 +18,9 @@ function Auth(){
     const [showPassword,setShowPassword] = React.useState(false);
     const [showResetForm,setShowResetForm] = React.useState(false);
     const dispatch = useDispatch()
-    const error = useSelector(state=>state.auth.error);
     const message = useSelector(state=>state.auth.message);
     const isAuth = useSelector(state=>state.auth.auth);
+    const role = useSelector(state=>state.auth.user.role);
 
     const schema = yup.object().shape({
         login:yup.string().required(),
@@ -31,9 +31,14 @@ function Auth(){
     });
 
     React.useEffect(()=>{
+        /// костыль
          if(isAuth){
           navigate('/dashboard')
         }
+         if(role === 4) {
+             navigate('/admin')
+         }
+         ///
     },[isAuth,message]);
 
     const onSubmitAuth=data=>{

@@ -3,7 +3,8 @@ import dayjs from "dayjs";
 import FormRegister from "../../components/Form/FormRegister";
 import {useSelector,useDispatch} from "react-redux";
 import {actionGetUser,actionDeleteUser} from "../../store/actions/actionsAdmin";
-import {Paper,Button} from "@material-ui/core";
+import {actionsUploadDepartment} from "../../store/actions/actionsDepartment";
+import {Paper,Button,Input,InputLabel} from "@material-ui/core";
 
 function Admin() {
     const dispatch = useDispatch()
@@ -16,6 +17,10 @@ function Admin() {
 
     const onDeleteUser=(user)=>{
         dispatch(actionDeleteUser(user))
+    }
+
+    const onChange=({target})=>{
+        dispatch(actionsUploadDepartment(target.files[0]))
     }
 
     return(
@@ -35,6 +40,30 @@ function Admin() {
                         </Button>
                     </Paper>
                 ))}
+            </div>
+            <div>
+                <h1>Загрузить список </h1>
+                <>
+                    <InputLabel htmlFor="import-button">
+                       <Input
+                            id="import-button"
+                            inputProps={{
+                                accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            }}
+                            style={{display:"none"}}
+                            onChange={onChange}
+                            type="file"
+                       />
+                       <Button
+                        color="secondary"
+                        variant="contained"
+                        component="span"
+                       >
+                           Загрузить файл...
+                       </Button>
+
+                    </InputLabel>
+                </>
             </div>
         </div>
     )

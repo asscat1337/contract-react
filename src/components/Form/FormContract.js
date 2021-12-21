@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -6,10 +6,8 @@ import {useSelector,useDispatch}  from "react-redux";
 import {TextField,Button,FormGroup,FormControlLabel,Checkbox,FormHelperText,Grid} from "@mui/material";
 import Select from 'react-select'
 import NumberFormat from "react-number-format";
-import {getDepartment} from "../../store/actions/actionsDepartment";
-import {getOrganization} from "../../store/actions/actionsOrganization";
-import {actionGetType} from "../../store/actions/actionsTypes";
-import {actionAddDashboard,actionEditContract,actionAddContractFromFile} from "../../store/actions/actionsDashboard";
+import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
+import CustomSnackBar from "../Snackbar/SnackBar";
 
 
 const NumberFormatCustom = React.forwardRef((props,ref)=>{
@@ -35,7 +33,9 @@ const NumberFormatCustom = React.forwardRef((props,ref)=>{
 
 
 function FormContract({editContract = {},editable = false}){
-    // const [onFile,onChangeFile] = useState(null)
+    const [open,setOpen] = React.useState(false);
+    const [message,setMessage] = React.useState("");
+    const [error,setError] = React.useState("")
     const schema = yup.object().shape({
          // костыль
          sum:editable ? yup.number() : yup.number().required('Введите сумма'),
@@ -55,18 +55,16 @@ function FormContract({editContract = {},editable = false}){
     const organization = useSelector(state=>state.organization.organization);
     const department = useSelector(state=>state.department.department);
     const type = useSelector(state=>state.type.types);
+    const totalSumService = useSelector(state=>state.dashboard?.editableService?.map(item=>item.service_cost*item.service_count).reduce((a,b)=>a+b,0))
 
-
-    // const onChange=({target})=>{
-    //     onChangeFile(target.files[0])
-    // };
-    //
-    // const onClickAddFiles=()=>{
-    //     dispatch(actionAddContractFromFile(onFile))
-    // }
 
     const onSubmitForm=(data)=>{
        if(editable){
+         if(data.sum < totalSumService){
+            setOpen(true)
+            setError("Сумма ниже!")
+             return false
+         }
        const transformedEdit =  {
             ...data,
             id:editContract.contract_id,
@@ -77,8 +75,12 @@ function FormContract({editContract = {},editable = false}){
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };
+         setMessage('Отредактировано!');
           dispatch(actionEditContract(transformedEdit))
+           setOpen(true)
        }else{
+           setMessage('Успешно!');
+           setOpen(true)
            dispatch(actionAddDashboard(data));
            reset({})
        }
@@ -86,6 +88,15 @@ function FormContract({editContract = {},editable = false}){
 
     return(
         <Grid container direction="column" justifyContent="center" alignItems="center" columnSpacing={{xs:1,sm:2,md:3}}>
+            {
+                open &&
+                    <CustomSnackBar
+                        open
+                        handleClose={()=>setOpen(false)}
+                        error={error}
+                        message={message}
+                    />
+            }
             <form action="" onSubmit={handleSubmit(onSubmitForm)}>
                 <Grid item>
                 <Controller

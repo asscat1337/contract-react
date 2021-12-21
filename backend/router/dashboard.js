@@ -23,6 +23,7 @@ router.get('/get-branch',async (req,res)=>{
             return res.json(mappedDepartment)
         })
 })
+router.post('/upload-file',multer({storage: storageConfig}).single('file'),dashboardController.uploadFile)
 router.get('/add-dog',async (req,res)=>{
     const results = [];
     await fs.createReadStream('./router/hospitals.csv')

@@ -1,6 +1,7 @@
 import {SHOW_DEPARTMENT,
     LOAD_DEPARTMENT,
     ERROR_DEPARTMENT,
+    UPLOAD_FILE
 } from '../types'
 
 const initialState = {
@@ -29,7 +30,12 @@ function departmentReducer(state=initialState,action){
                     loading: false,
                     error: action.payload,
                     department: [...state.department]
-                }
+                };
+            case UPLOAD_FILE :
+                return {
+                 loading:false,
+                 department: [...state.department,action.payload]
+                };
             default:
                 return state
         }
@@ -37,4 +43,5 @@ function departmentReducer(state=initialState,action){
 
 export const showDepartment=payload=>({type:SHOW_DEPARTMENT,payload});
 export const errorDepartment=payload=>({type:ERROR_DEPARTMENT,payload});
+export const fileUpload=payload=>({type:UPLOAD_FILE,payload});
 export default departmentReducer
