@@ -17,13 +17,13 @@ class AuthController {
                     {model:Roles}
                 ]
             });
+            if(!candidate.length){
+                return res.status(401).send({error:'Такого пользователя не существует'})
+            }
              const hashedPassword = await bcrypt.compare(password,candidate[0].dataValues.password);
              if(!hashedPassword){
                   res.status(401).send({error:'Неверный пароль'})
              }
-            if(!candidate.length){
-                return res.status(401).json({error:'Такого пользователя не существует'})
-            }
             if(candidate.length && hashedPassword){
                 const JWTToken = jwt.sign({
                     login,

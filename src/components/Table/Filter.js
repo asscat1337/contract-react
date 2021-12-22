@@ -5,7 +5,7 @@ function GlobalFilter({setFilter,filter}){
         <TextField
             fullWidth
             value={filter || ""}
-            onChange={e=>setFilter(e.target.value || undefined)}
+            onChange={e=>setFilter(e.target.value.toString() || undefined)}
             id="standard-basic"
             label="Поиск..."
             placeholder={`Поиск...`}
@@ -29,7 +29,7 @@ return (
         type="text"
         value={filterValue || ''}
         onChange={e=>{
-        setFilter(e.target.value || undefined)}
+        setFilter(e.target.value.toString() || undefined)}
         }
         placeholder={` Поиск ${length}...`}
     />

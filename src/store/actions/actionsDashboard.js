@@ -13,7 +13,7 @@ import {
 function actionGetDashboard({page,size,branch,roles}) {
     return dispatch=>{
         dispatch(loadDataDashboard());
-        axios.get(`http://localhost:3005/dashboard?page=${page}&size=${size}`,{
+        axios.get(`${process.env.REACT_APP_BASE_URL}/dashboard?page=${page}&size=${size}`,{
             headers:{
                 "Authorization":`Bearer ${sessionStorage.getItem('token')}`
             },
@@ -31,7 +31,7 @@ function actionGetDashboard({page,size,branch,roles}) {
 function actionFindService(value) {
     return dispatch=>{
         dispatch(loadDataDashboard())
-        axios.post('http://localhost:3005/dashboard/findService',{id:value})
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/findService`,{id:value})
             .then(({data})=>dispatch(getDataService({id:Number(value),data})))
             .catch(({error})=>dispatch(errorDashboard(error)))
     }
@@ -39,7 +39,7 @@ function actionFindService(value) {
 function actionAddDashboard(data) {
     console.log(data);
     return dispatch=>{
-        axios.post('http://localhost:3005/dashboard/add',data)
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/add`,data)
             .then(()=>dispatch(addDashboard(data)))
             .catch((error)=>dispatch(errorDashboard(error)))
     }
@@ -48,7 +48,7 @@ function actionDeleteContract(current) {
     return dispatch=>{
         axios({
             method:'delete',
-            url:'http://localhost:3005/dashboard/delete-contract',
+            url:`${process.env.REACT_APP_BASE_URL}/dashboard/delete-contract`,
             data:{
                 current
             }

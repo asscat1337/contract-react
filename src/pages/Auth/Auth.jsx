@@ -1,5 +1,5 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate,useLocation} from 'react-router-dom'
 import {useForm} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver}  from "@hookform/resolvers/yup";
@@ -42,8 +42,8 @@ function Auth(){
     },[isAuth,message]);
 
     const onSubmitAuth=data=>{
-         dispatch(actionsLoginUser(data))
-         setOpen(true)
+         dispatch(actionsLoginUser(data));
+         setOpen(true);
     }
     const onShowPassword = ()=>{
         setShowPassword(!showPassword)

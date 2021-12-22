@@ -79,101 +79,108 @@ const {
     }
 
     return(
-     <>
-     <Grid container direction="row" justifyContent="flex-start">
-         <Grid item>
-             <label>
-                 <TableCheckboxes {...getToggleHideAllColumnsProps()}/>
-                 Скрыть все
-             </label>
-         </Grid>
-         <Grid item>
-             {allColumns.slice(1,10).map(column=>(
-                     <label key={column.id}>
-                         <Checkbox  {...column.getToggleHiddenProps()}/>
-                         {column.id}
-                     </label>
-             ))}
-         </Grid>
-     </Grid>
-    <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
-    <TableContainer component={Paper}>
-     <Table {...getTableProps()} size={"small"} sx={{minWidth:600}}>
-         <TableHead>
-         {headerGroups.map(headerGroup=>(
-             <TableRow {...headerGroup.getHeaderGroupProps()}>
-                 {headerGroup.headers.map(column=>(
-                     <TableCell {...column.getHeaderProps()}>
-                         {column.render('Header')}
-                         <Filter column={column}/>
-                     </TableCell>
-                 )
-                 )}
-             </TableRow>
-         )
-         )}
-         </TableHead>
-         <TableBody {...getTableBodyProps()}>
-         {
-             page.map((row)=>{
-                 prepareRow(row)
-                 const rowProps = row.getRowProps(getRowProps(row));
-                 return(
-                     <React.Fragment key={rowProps.key}>
-                         <TableRow {...rowProps}>
-                             {row.cells.map(cell=>{
-                                 return  <TableCell {...cell.getCellProps(getCellProps(cell))}>
-                                     {cell.render('Cell')}
-                                 </TableCell>
-                             }
-                             )}
-                         </TableRow>
-                         {row.isExpanded ? (
-                                 <TableRow>
-                                     <TableCell colSpan={visibleColumns.length}>
-                                         {renderRowSubComponent({row,rowProps,visibleColumns})}
-                                     </TableCell>
-                                 </TableRow>
-                         ):null}
-                     </React.Fragment>
-                 )
-             })
-         }
-         </TableBody>
-     </Table>
-    </TableContainer>
-            <Stack direction="row" spacing="2">
-                <Button variant="contained" onClick={()=>gotoPage(0)}>
-                    {'<<'}
-                </Button>
-                <Button variant="contained" onClick={()=>gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                    {'>>'}
-                </Button>
-                <Button variant="contained" onClick={previousPage} disabled={!canPreviousPage}>
-                    {'<'}
-                </Button>
-                <Button variant="contained" onClick={nextPage} disabled={!canNextPage}>
-                    {'>'}
-                </Button>
-                <span>
+         <>
+             {data.length ? (
+                 <>
+                     <Grid container direction="row" justifyContent="flex-start">
+                         <Grid item>
+                             <label>
+                                 <TableCheckboxes {...getToggleHideAllColumnsProps()}/>
+                                 Скрыть все
+                             </label>
+                         </Grid>
+                         <Grid item>
+                             {allColumns.slice(1,10).map(column=>(
+                                 <label key={column.id}>
+                                     <Checkbox  {...column.getToggleHiddenProps()}/>
+                                     {column.id}
+                                 </label>
+                             ))}
+                         </Grid>
+                     </Grid>
+                     <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+                     <TableContainer component={Paper}>
+                         <Table {...getTableProps()} size={"small"} sx={{minWidth:600}}>
+                             <TableHead>
+                                 {headerGroups.map(headerGroup=>(
+                                         <TableRow {...headerGroup.getHeaderGroupProps()}>
+                                             {headerGroup.headers.map(column=>(
+                                                     <TableCell {...column.getHeaderProps()}>
+                                                         {column.render('Header')}
+                                                         <Filter column={column}/>
+                                                     </TableCell>
+                                                 )
+                                             )}
+                                         </TableRow>
+                                     )
+                                 )}
+                             </TableHead>
+                             <TableBody {...getTableBodyProps()}>
+                                 {
+                                     page.map((row)=>{
+                                         prepareRow(row)
+                                         const rowProps = row.getRowProps(getRowProps(row));
+                                         return(
+                                             <React.Fragment key={rowProps.key}>
+                                                 <TableRow {...rowProps}>
+                                                     {row.cells.map(cell=>{
+                                                             return  <TableCell {...cell.getCellProps(getCellProps(cell))}>
+                                                                 {cell.render('Cell')}
+                                                             </TableCell>
+                                                         }
+                                                     )}
+                                                 </TableRow>
+                                                 {row.isExpanded ? (
+                                                     <TableRow>
+                                                         <TableCell colSpan={visibleColumns.length}>
+                                                             {renderRowSubComponent({row,rowProps,visibleColumns})}
+                                                         </TableCell>
+                                                     </TableRow>
+                                                 ):null}
+                                             </React.Fragment>
+                                         )
+                                     })
+                                 }
+                             </TableBody>
+                         </Table>
+                     </TableContainer>
+                     <Stack direction="row" spacing="2">
+                         <Button variant="contained" onClick={()=>gotoPage(0)}>
+                             {'<<'}
+                         </Button>
+                         <Button variant="contained" onClick={()=>gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                             {'>>'}
+                         </Button>
+                         <Button variant="contained" onClick={previousPage} disabled={!canPreviousPage}>
+                             {'<'}
+                         </Button>
+                         <Button variant="contained" onClick={nextPage} disabled={!canNextPage}>
+                             {'>'}
+                         </Button>
+                         <span>
                         Страница {pageIndex+1} из {pageOptions.length}
                     </span>
-                <Select
-                    onChange={(e)=>onChangeSelect(e)}
-                    label="Количество"
-                    value={pageSize}
-                >
-                    {[5,10,20,30,40,50].map(number=>(
-                        <MenuItem value={number} key={number}>Показать {number}</MenuItem>
-                    ))}
-                </Select>
-                <TextField
-                    type="number"
-                    variant="outlined"
-                    defaultValue={pageIndex+1}
-                    onChange={(e)=>onChangeInput(e)}
-                />
-            </Stack>
+                         <Select
+                             onChange={(e)=>onChangeSelect(e)}
+                             label="Количество"
+                             value={pageSize}
+                         >
+                             {[5,10,20,30,40,50].map(number=>(
+                                 <MenuItem value={number} key={number}>Показать {number}</MenuItem>
+                             ))}
+                         </Select>
+                         <TextField
+                             type="number"
+                             variant="outlined"
+                             defaultValue={pageIndex+1}
+                             onChange={(e)=>onChangeInput(e)}
+                         />
+                     </Stack>
+                 </>
+
+             ): (
+                 <h5>Нет данных 😞</h5>
+             )}
          </>
  )
 }

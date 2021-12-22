@@ -9,7 +9,6 @@ function ProtectedRoute({component:Component,roles}){
     const isAuth = sessionStorage.getItem('auth');
     const location = useLocation();
     const checkUserRole = roles.find(role=>role === roleUser);
-
     if(isAuth && checkUserRole){
         return <Component/>
     }

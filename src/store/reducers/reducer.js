@@ -46,6 +46,7 @@ function reducer(state = initialState,action){
                     if(item.contract_id === action.payload.id){
                         return {
                             ...item,
+                            isLoad:action.payload.isLoad,
                             children:[...item.children,action.payload.data].flat()
                         }
                     }

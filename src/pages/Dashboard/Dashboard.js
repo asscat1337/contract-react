@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import {CssBaseline} from "@material-ui/core";
 import {red} from "@material-ui/core/colors";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import NumberFormat from "react-number-format";
 import AlertDialog from "../../components/Modal/AlertDialog";
 
 function Dashboard() {
@@ -43,85 +44,87 @@ function Dashboard() {
     }
 
 
-    const columns = useMemo(()=>
-        [
-            {
-                Header:()=>null,
-                id:'expander',
-                Cell:({row})=>(
-                    <Button onClick={()=>onShowInfo(row)} variant="outlined">
-                       <ExpandMoreIcon/>
-                    </Button>
-                ),
-                SubCell:()=>null
-            },
-            {
-                Header:'Номер контракта',
-                accessor:d=>d.contract_id
-            },
-            {
-                Header: 'Дата',
-                accessor: (d)=>dayjs(d.date).format('YYYY-MM-DD')
-            },
-            {
-                Header:"Сумма",
-                accessor: (d)=>new Intl.NumberFormat("ru",{
-                    style: "currency",
-                    currency: "RUB",
-                    minimumFractionDigits:2
-                }).format(d.sum)
-            },
-            {
-                Header:"Дата заключения",
-                accessor: (d)=>dayjs(d.validity).format('YYYY-MM-DD')
-            },
-            {
-                Header:"Дата окончания",
-                accessor: (d)=>dayjs(d.rendering).format('YYYY-MM-DD')
-            },
-            {
-                Header:"Описание",
-                accessor: (d)=>d.description
-            },
-            {
-                Header:"Отделение",
-                accessor: d=>d.branch,
-                Filter:SelectColumnFilter,
-                filter:'equals'
-            },
-            {
-                Header:"Организация",
-                accessor: d=>d.organization
-            },
-            {
-                Header:"Тип",
-                accessor: d=>d.type,
-                Filter:SelectColumnFilter,
-                filter:'equals'
-            },
-            {
-                Header:'Действия',
-                accessor:"action",
-                Filter:()=>null,
-                Cell:({row})=>(
-                         <>
-                             {roles === 2 && (
-                                 <>
-                                 <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onOpenConfirm(row.original)}>
-                                     Удалить
-                                 </Button>
-                                 <Button variant="outlined" size="small" startIcon={<EditIcon/>} onClick={()=>onEditContract(row)}>
-                                    <Link to={`/edit/${row.original.contract_id}`}>Редактировать</Link>
-                                 </Button>
-                                     </>
-                             )}
-                         </>
-                )
-            }
-
-        ],[open])
+    const columns = useMemo(()=>{
+           const tableArray =  [
+                {
+                    Header:()=>null,
+                    id:'expander',
+                    Cell:({row})=>(
+                        <Button onClick={()=>onShowInfo(row)} variant="outlined">
+                            <ExpandMoreIcon/>
+                        </Button>
+                    ),
+                    SubCell:()=>null
+                },
+                {
+                    Header:'Номер контракта',
+                    accessor:d=>d.contract_id
+                },
+                {
+                    Header: 'Дата',
+                    accessor: (d)=>dayjs(d.date).format('YYYY-MM-DD')
+                },
+                {
+                    Header:"Сумма",
+                    accessor: (d)=>d.sum,
+                    Cell:({row})=>(
+                        <NumberFormat value={row.original.sum} displayType="text" prefix="₽" thousandSeparator/>
+                    )
+                },
+                {
+                    Header:"Дата заключения",
+                    accessor: (d)=>dayjs(d.validity).format('YYYY-MM-DD')
+                },
+                {
+                    Header:"Дата окончания",
+                    accessor: (d)=>dayjs(d.rendering).format('YYYY-MM-DD')
+                },
+                {
+                    Header:"Описание",
+                    accessor: (d)=>d.description
+                },
+                {
+                    Header:"Отделение",
+                    accessor: d=>d.branch,
+                    Filter:SelectColumnFilter,
+                    filter:'equals'
+                },
+                {
+                    Header:"Организация",
+                    accessor: d=>d.organization
+                },
+                {
+                    Header:"Тип",
+                    accessor: d=>d.type,
+                    Filter:SelectColumnFilter,
+                    filter:'equals'
+                },
+            ];
+        if(roles === 2){
+            return [...tableArray,
+                {
+                    Header:'Действия',
+                    accessor:"action",
+                    Filter:()=>null,
+                    Cell:({row})=>(
+                        <>
+                                <>
+                                    <Button variant="outlined" size="small" startIcon={<DeleteIcon/>} color="error" onClick={()=>onOpenConfirm(row.original)}>
+                                        Удалить
+                                    </Button>
+                                    <Button variant="outlined" size="small" startIcon={<EditIcon/>} onClick={()=>onEditContract(row)}>
+                                        <Link to={`/edit/${row.original.contract_id}`}>Редактировать</Link>
+                                    </Button>
+                                </>
+                        </>
+                    )
+                }]
+        }
+        return tableArray
+    }
+        ,[open]);
     const onShowInfo=(row)=>{
-        setOpen(true)
+        setOpen(true);
         setCurrentId(row.original.contract_id)
     }
 

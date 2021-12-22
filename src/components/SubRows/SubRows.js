@@ -14,9 +14,9 @@ function SubRows({current,setModal,testCurrentId}) {
     const loading = useSelector(state=>state.dashboard.loading);
     const {children} = data;
     useEffect(()=>{
-        if(!children.length){
+        if(!data.isLoad){
             dispatch(action2(current))
-       }
+        }
     },[data])
     const onShowModal=(row)=>{
         const {services_id} = row.original
@@ -79,33 +79,40 @@ function SubRows({current,setModal,testCurrentId}) {
     }
     return (
         <>
-                <TableContainer {...getTableProps()} className={styles.service}>
-                    <Table>
-                    <TableHead>
-                    {headerGroups.map(headerGroup=>(
-                        <TableRow {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column=>{
-                                return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>
-                            })}
-                        </TableRow>
-                    ))}
-                    </TableHead>
-                    <TableBody {...getTableBodyProps()}>
-                    {
-                        rows.map((row,i)=>{
-                            prepareRow(row)
-                            return(
-                                <TableRow {...row.getRowProps()}>
-                                    {row.cells.map(cell=>{
-                                        return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
-                                    })}
-                                </TableRow>
-                            )
-                        })
-                    }
-                    </TableBody>
-                    </Table>
-                </TableContainer>
+            {data.length ? (
+                <>
+                    <TableContainer {...getTableProps()} className={styles.service}>
+                        <Table>
+                            <TableHead>
+                                {headerGroups.map(headerGroup=>(
+                                    <TableRow {...headerGroup.getHeaderGroupProps()}>
+                                        {headerGroup.headers.map(column=>{
+                                            return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>
+                                        })}
+                                    </TableRow>
+                                ))}
+                            </TableHead>
+                            <TableBody {...getTableBodyProps()}>
+                                {
+                                    rows.map((row,i)=>{
+                                        prepareRow(row)
+                                        return(
+                                            <TableRow {...row.getRowProps()}>
+                                                {row.cells.map(cell=>{
+                                                    return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                                                })}
+                                            </TableRow>
+                                        )
+                                    })
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </>
+            ):(
+                <h5>Нет данных 😞</h5>
+            )}
+
         </>
     )
 }

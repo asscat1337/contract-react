@@ -5,6 +5,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
 import {TextField,Button,FormGroup,FormControlLabel,Checkbox,FormHelperText,Grid} from "@mui/material";
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import NumberFormat from "react-number-format";
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
@@ -57,7 +58,6 @@ function FormContract({editContract = {},editable = false}){
     const type = useSelector(state=>state.type.types);
     const totalSumService = useSelector(state=>state.dashboard?.editableService?.map(item=>item.service_cost*item.service_count).reduce((a,b)=>a+b,0))
 
-
     const onSubmitForm=(data)=>{
        if(editable){
          if(data.sum < totalSumService){
@@ -79,9 +79,10 @@ function FormContract({editContract = {},editable = false}){
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
+           console.log(data)
+           //dispatch(actionAddDashboard(data));
            setMessage('Успешно!');
            setOpen(true)
-           dispatch(actionAddDashboard(data));
            reset({})
        }
     }
@@ -174,13 +175,14 @@ function FormContract({editContract = {},editable = false}){
                     name="organization"
                     rules={{required:true}}
                     render={({field:{onChange,value}})=>(
-                        <Select
+                        <CreatableSelect
                             placeholder="Выберите организацию..."
                             defaultValue={organization.find(org=>org.label === editContract.organization)}
                             isClearable
                             isSearchable
                             options={organization}
                             onChange={val=>onChange(val.label)}
+                            // onInputChange={handleInputChange}
                         />
                     )}
                 />
