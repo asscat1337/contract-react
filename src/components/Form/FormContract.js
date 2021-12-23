@@ -181,7 +181,7 @@ function FormContract({editContract = {},editable = false}){
                             isClearable
                             isSearchable
                             options={organization}
-                            onChange={val=>onChange(val.label)}
+                            onChange={val=>val !== null ? onChange(val.value) : false}
                             // onInputChange={handleInputChange}
                         />
                     )}
@@ -191,10 +191,10 @@ function FormContract({editContract = {},editable = false}){
                     name="department"
                     rules={{required:true}}
                     render={({field:{onChange,value,ref}})=>(
-                        <Select
+                        <CreatableSelect
                             placeholder="Выберите отделение..."
                             defaultValue={department.find(dep=>dep.label === editContract.branch)}
-                            onChange={val=>onChange(val.label)}
+                            onChange={val=>val !== null ? onChange(val.value) : false}
                             isClearable
                             isSearchable
                             options={department}

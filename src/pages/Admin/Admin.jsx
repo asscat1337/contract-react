@@ -5,6 +5,7 @@ import {useSelector,useDispatch} from "react-redux";
 import {actionGetUser,actionDeleteUser} from "../../store/actions/actionsAdmin";
 import {actionsUploadDepartment} from "../../store/actions/actionsDepartment";
 import {Paper,Button,Input,InputLabel} from "@material-ui/core";
+import FormAddDepartment from "../../components/Form/FormDepartment";
 
 function Admin() {
     const dispatch = useDispatch()
@@ -65,6 +66,8 @@ function Admin() {
                     </InputLabel>
                 </>
             </div>
+            <h5>Добавить отделение</h5>
+            <FormAddDepartment/>
         </div>
     )
 }

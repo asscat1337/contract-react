@@ -1,7 +1,8 @@
 import {
     showDepartment,
     errorDepartment,
-    fileUpload
+    fileUpload,
+    addDepartment
 } from "../reducers/departmentReducer";
 import axios from "axios";
 
@@ -19,11 +20,19 @@ function actionsUploadDepartment(data){
         formData.append('file',data)
         return dispatch=>{
             axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file`,formData)
-                // .then(({data})=>dispatch(fileUpload(data)))
+                .then(({data})=>dispatch(fileUpload(data)))
         }
+}
+function actionsAddDepartment(data){
+    return dispatch=>{
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/add-department`,data)
+            .then(()=>dispatch(addDepartment(data)))
+            .catch(error=>dispatch(errorDepartment(error)))
+    }
 }
 
 export {
     getDepartment,
-    actionsUploadDepartment
+    actionsUploadDepartment,
+    actionsAddDepartment
 }

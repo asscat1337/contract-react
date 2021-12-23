@@ -226,6 +226,15 @@ class DashboardController {
             return res.status(500).json(e)
         }
     }
+    async addDepartment(req,res,next){
+        try{
+            const {department} = req.body
+            await Branch.create({description:department})
+                .then(()=>res.status(200).send({message:'Отделение успешно добавлено!'}))
+        }catch (e) {
+            return res.status(500).send({error:'Произошла ошибка при выполнение запроса'})
+        }
+    }
 
 }
 
