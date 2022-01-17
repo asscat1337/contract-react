@@ -3,37 +3,42 @@ const connection = require('../core/model');
 
 
 
-const Services = connection.define('services',{
-    services_id:{
-        type:DataTypes.INTEGER,
-        primaryKey:true,
-        allowNull:false,
-        autoIncrement:true
-    },
-    service_name:{
-        type:DataTypes.TEXT,
-        allowNull: false
-    },
-    service_cost:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    service_count:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    agreement_id:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    },
-    service_left:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    }
+const generateServices=(id)=>{
 
-},{
-    freezeTableName:true,
-    timestamps:false
-});
+   return connection.define(`services_${id}`,{
+        services_id:{
+            type:DataTypes.INTEGER,
+            primaryKey:true,
+            allowNull:false,
+            autoIncrement:true
+        },
+        service_name:{
+            type:DataTypes.TEXT,
+            allowNull: false
+        },
+        service_cost:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        },
+        service_count:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        },
+        agreement_id:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        },
+        service_left:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        }
 
-module.exports = Services
+    },{
+        freezeTableName:true,
+        timestamps:false
+    });
+
+
+}
+
+module.exports = generateServices

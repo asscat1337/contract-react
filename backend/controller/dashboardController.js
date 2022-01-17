@@ -1,8 +1,8 @@
 const Contract = require('../models/Contract');
-const Service = require('../models/Services');
+const ServiceAction = require('../databases/service_action')
+const PatientAction = require('../databases/patient_action')
 const Branch = require('../models/Branch');
 const Type = require('../models/Type');
-const Patient = require('../models/Patient');
 const {Op} = require('sequelize');
 const dayjs = require('dayjs');
 const csvParser = require('csv-parser');
@@ -39,7 +39,12 @@ class DashboardController {
     async addContract(req, res, next) {
         try {
             const {department} = req.body
-            await Contract.create({...req.body,branch:department,date:dayjs().format('YYYY-MM-DD')})
+            await Contract.create({
+                ...req.body,
+                branch:department,
+                date:dayjs().format('YYYY-MM-DD'),
+                sum_left:req.body.sum
+            })
                 .then(() => {
                     return res.send('ok').status(200)
                 })
@@ -53,10 +58,14 @@ class DashboardController {
     async findService(req,res,next){
         try {
             const {id} = req.body;
-            await Service.findAll({where:{
-                   agreement_id:id /// поменять на contract_id
-                }
-            },{raw: true}).then(data=>res.json(data))
+            const tables_length =  await ServiceAction.ActionCheckTable(id)
+            if(tables_length.length){
+                const data = await ServiceAction.showService(id)
+                console.log(data)
+                return res.json(data)
+            }else{
+                await ServiceAction.createService(id)
+            }
         }catch (e) {
             console.log(e)
             res.status(500).send(e)
@@ -68,9 +77,18 @@ class DashboardController {
             await Contract.destroy({where:{
                 contract_id:current
                 }
-            }).then(res.send().status(200))
+            })
+                .then(async ()=>{
+                    await ServiceAction.dropTable(current)
+                    await PatientAction.dropTable(current)
+                })
         }catch (e) {
             res.send(e).status(500)
+        }
+        finally {
+            return {
+                message:'Запись успешно удалена!'
+            }
         }
     }
     async addService(req,res,next){
@@ -79,21 +97,16 @@ class DashboardController {
             const findContract = await Contract.findAll({
                 where:{
                     contract_id:id
-                }
+                },
+                raw:true
             })
-            const {serviceCount,serviceCost,serviceName} = req.body.data;
 
-            await Service.create({
-                service_name:serviceName,
-                service_cost:serviceCost,
-                service_count:serviceCount,
-                agreement_id: id,
-                service_left: serviceCount
-            })
-                .then(()=>Contract.update({
-                    sum_left:findContract.dataValues.sum_left - (serviceCount*serviceCost)
-                }))
-                .then(data=>res.json(data))
+            const {serviceCount,serviceCost,serviceName} = req.body.data;
+            const {sum_left} = findContract[0]
+            const data = await ServiceAction.addService(serviceCount,serviceCost,serviceName,id,sum_left)
+
+            return res.status(200).json(data)
+
         }catch (e) {
             return res.send(e).status(500)
         }
@@ -101,72 +114,44 @@ class DashboardController {
     async editCurrentService(req,res){
         try{
             const {id} = req.params;
-            await Service.findAll({
-                where:{
-                    agreement_id:id
-                }
-            }).then(data=>res.json(data))
+
+            const checkService = await ServiceAction.ActionCheckTable(id)
+
+            if(checkService.length){
+                const data = await ServiceAction.showService(id)
+
+                return res.status(200).json(data)
+            }else {
+                await ServiceAction.createService(id)
+            }
+
         }catch (e) {
-            return res.send(e).status(500)
+            return res.status(500).send(e)
         }
     }
     async deleteService(req,res,next){
         try{
-            const {id} = req.body;
-            await Service.destroy({where:{
-                services_id: id
-                }})
-                .then(res.send().status(200))
+             const {id,deletedId} = req.body;
+             const data = await ServiceAction.deleteService(id,deletedId)
+
+            return res.status(200).json(data)
+
         }catch (e) {
-            console.log(e)
             return res.send(e).status(500)
         }
     }
     async editService(req,res,next){
         try{
-            const {serviceName,serviceCost,serviceCount,id} = req.body;
+            const {service_name,service_cost,service_count,prevSumService,id,service_id} = req.body;
             const findContract = await Contract.findAll({
                 where:{
                     contract_id:id
-                }
+                },
+                raw:true
             })
-            await Service.update({
-                service_name:serviceName,
-                service_cost:serviceCost,
-                service_count:serviceCount,
-                service_left:serviceCount
-            },{where:{
-                services_id:id
-                }})
-                .then(()=>Contract.update({
-                    sum_left:findContract.dataValues.sum_left - (serviceCost*serviceCount)
-                }))
-                .then(()=>res.status(200).json({message:'Услуга добавлена'}))
-        }catch (e) {
-            return res.send(e).status(500)
-        }
-    }
-    async addPatient(req,res,next){
-        try{
-            const {id,fio,birthday} = req.body;
-            const findCurrentService = await Service.findOne({where:{
-                services_id:id
-                }});
-            await Patient.create(
-                {
-                    fio,
-                    birthday,
-                    date_added: dayjs().format("YYYY-MM-DD"),
-                    service_id:id
-                })
-                .then(()=>Service.update({service_left:findCurrentService.service_left-1},{
-                    where:{
-                        services_id:id
-                    }
-                }))
-                .then(()=>res.status(200).json({'message':'Пациент добавлен'}))
-                .catch(error=>res.status(500).json({'message':error}))
-
+            const {sum_left} = findContract[0]
+            const result =  await ServiceAction.updateService(id,service_name,service_cost,service_count,service_id,sum_left,prevSumService)
+            return res.status(200).json(result)
         }catch (e) {
             return res.send(e).status(500)
         }

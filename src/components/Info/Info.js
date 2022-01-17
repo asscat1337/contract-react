@@ -9,14 +9,14 @@ import dayjs from "dayjs";
 
 function Info({currentId,setCurrentId}){
     const dispatch = useDispatch()
-    const [patientId,testCurrentId] = useState(null)
+    const [patientId,setPatientId] = useState(null)
     const state = useSelector((state)=>state.patient.patient);
     const {open,setOpen} = useContext(AppContext)
     const [modal,setModal] = useState(false)
 
     const currentPatientData = state.find(item=>item.id === patientId);
-    console.log(state,currentPatientData)
     useEffect(()=>{
+         console.log(patientId)
         if(patientId && !currentPatientData){
             dispatch(action3(patientId))
         }
@@ -32,11 +32,11 @@ function Info({currentId,setCurrentId}){
             <div className={styles.sidebar} onClick={e=>e.stopPropagation()}>
                 <div className={styles.header}></div>
                 <div className={styles.wrapper}>
-                    <h1>Hello</h1>
+                    <h1>Список услуг</h1>
                     <SubRows
                         current={currentId}
                         setModal={setModal}
-                        testCurrentId={testCurrentId}
+                        setPatientId={setPatientId}
                     />
                 </div>
             </div>

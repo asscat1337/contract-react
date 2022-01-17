@@ -13,10 +13,11 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     const [error,setError] = useState('')
     const [open,setOpen] = React.useState(false);
     const editContract = useSelector(state=>state.dashboard.editContract.sum_left)
+
     const schema = yup.object().shape({
-        serviceName:yup.string().required(),
-        serviceCost: yup.number().required(),
-        serviceCount: yup.number().required()
+        service_name:yup.string().required(),
+        service_cost: yup.number().required(),
+        service_count: yup.number().required()
     })
 
     const {handleSubmit,register,setValue,reset} = useForm({
@@ -25,9 +26,9 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
 
     useEffect(()=>{
         if(editable){
-            setValue('serviceName',editData.service_name);
-            setValue('serviceCost',editData.service_cost);
-            setValue('serviceCount',editData.service_count)
+            setValue('service_name',editData.service_name);
+            setValue('service_cost',editData.service_cost);
+            setValue('service_count',editData.service_count)
         }
     },[editData]);
 
@@ -62,19 +63,19 @@ return(
                     fullWidth
                     type="text"
                     label="Название услуги"
-                    {...register('serviceName')}
+                    {...register('service_name')}
                 />
                 <TextField
                     fullWidth
                     type="text"
                     label="Стоимость"
-                    {...register('serviceCost')}
+                    {...register('service_cost')}
                 />
                 <TextField
                     fullWidth
                     type="text"
                     label="Количество"
-                    {...register('serviceCount')}
+                    {...register('service_count')}
                 />
                 <Grid item>
                     {children}

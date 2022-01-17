@@ -53,7 +53,7 @@ function App() {
                          path="dashboard"/>
                  <Route element={<ProtectedRoute roles={[2]} component={Add}/>} path="/add" exact/>
                  <Route element={<ProtectedRoute roles={[2]} component={Edit}/>} path="/edit/:id"/>
-                 <Route element={<Patient/>} path="/patient/:id"/>
+                 <Route element={<Patient/>} path="/patient/:service_id/:contract_id"/>
                  <Route element={<NotFound/>} path="*"/>
                  <Route element={<ProtectedRoute roles={[4]} component={Admin}/>} path="/admin"/>
             </Routes>

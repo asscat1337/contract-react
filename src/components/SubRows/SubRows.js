@@ -7,22 +7,26 @@ import {TableCell,TableBody,TableRow,TableHead,TableContainer,Table} from "@mui/
 import styles from './SubRows.module.scss'
 
 
-function SubRows({current,setModal,testCurrentId}) {
+function SubRows({current,setModal,setPatientId}) {
     const dispatch = useDispatch();
     const roles = useSelector(state=>state.auth.user.role);
     const data = useSelector(state=>state.dashboard.data.find(item=>item.contract_id === current));
     const loading = useSelector(state=>state.dashboard.loading);
     const {children} = data;
+
+
+
     useEffect(()=>{
         if(!data.isLoad){
             dispatch(action2(current))
         }
     },[data])
     const onShowModal=(row)=>{
-        const {services_id} = row.original
+        const {agreement_id} = row.original
         setModal(true)
-         testCurrentId(services_id)
+        setPatientId(agreement_id)
     }
+
     const columns = useMemo(()=>[
         {
             Header:'Номер услуги',
@@ -51,7 +55,7 @@ function SubRows({current,setModal,testCurrentId}) {
                 <>
                     <a href="#" onClick={()=>onShowModal(row)}>Показать пациентов</a>
                     {Number(roles) === 1 && row.original.service_left !== 0 ? (
-                                <Link to={`/patient/${row.original.services_id}`}>
+                                <Link to={`/patient/${row.original.service_id}/${row.original.agreement_id}`}>
                                     Добавить пациента
                                 </Link>
                     ) : null}
@@ -79,7 +83,7 @@ function SubRows({current,setModal,testCurrentId}) {
     }
     return (
         <>
-            {data.length ? (
+            {children.length ? (
                 <>
                     <TableContainer {...getTableProps()} className={styles.service}>
                         <Table>

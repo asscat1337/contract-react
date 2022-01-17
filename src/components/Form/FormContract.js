@@ -59,6 +59,7 @@ function FormContract({editContract = {},editable = false}){
     const totalSumService = useSelector(state=>state.dashboard?.editableService?.map(item=>item.service_cost*item.service_count).reduce((a,b)=>a+b,0))
 
     const onSubmitForm=(data)=>{
+        console.log(data)
        if(editable){
          if(data.sum < totalSumService){
             setOpen(true)
@@ -80,10 +81,10 @@ function FormContract({editContract = {},editable = false}){
            setOpen(true)
        }else{
            console.log(data)
-           //dispatch(actionAddDashboard(data));
-           setMessage('Успешно!');
+           dispatch(actionAddDashboard(data));
+           setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)
-           reset({})
+           reset({activitiesbefore: ""})
        }
     }
 
@@ -181,8 +182,7 @@ function FormContract({editContract = {},editable = false}){
                             isClearable
                             isSearchable
                             options={organization}
-                            onChange={val=>val !== null ? onChange(val.value) : false}
-                            // onInputChange={handleInputChange}
+                            onChange={val=>val !== null ? onChange(val.label) : false}
                         />
                     )}
                 />
@@ -194,7 +194,7 @@ function FormContract({editContract = {},editable = false}){
                         <CreatableSelect
                             placeholder="Выберите отделение..."
                             defaultValue={department.find(dep=>dep.label === editContract.branch)}
-                            onChange={val=>val !== null ? onChange(val.value) : false}
+                            onChange={val=>val !== null ? onChange(val.label) : false}
                             isClearable
                             isSearchable
                             options={department}

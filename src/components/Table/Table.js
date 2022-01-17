@@ -144,17 +144,17 @@ const {
                              </TableBody>
                          </Table>
                      </TableContainer>
-                     <Stack direction="row" spacing="2">
-                         <Button variant="contained" onClick={()=>gotoPage(0)}>
+                     <Stack direction="row" spacing="2" justifyContent="space-around" alignItems="center">
+                         <Button variant="text" onClick={()=>gotoPage(0)}>
                              {'<<'}
                          </Button>
-                         <Button variant="contained" onClick={()=>gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                         <Button variant="text" onClick={()=>gotoPage(pageCount - 1)} disabled={!canNextPage}>
                              {'>>'}
                          </Button>
-                         <Button variant="contained" onClick={previousPage} disabled={!canPreviousPage}>
+                         <Button variant="text" onClick={previousPage} disabled={!canPreviousPage}>
                              {'<'}
                          </Button>
-                         <Button variant="contained" onClick={nextPage} disabled={!canNextPage}>
+                         <Button variant="text" onClick={nextPage} disabled={!canNextPage}>
                              {'>'}
                          </Button>
                          <span>

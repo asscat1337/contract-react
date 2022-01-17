@@ -81,7 +81,6 @@ router.post('/showCount',async(req,res)=>{
             ///
 })
 router.get('/get-type',dashboardController.getType)
-router.post('/add-patient',dashboardController.addPatient);
 router.post('/upload-file',multer({storage:storageConfig}).single('file'),dashboardController.addContractFromXlsx);
 /// переделать позже
 router.post('/showAllService',async(req,res)=>{
@@ -92,14 +91,6 @@ router.post('/showAllService',async(req,res)=>{
         })
 })
 ///
-router.post('/addPat',async(req,res)=>{
-    const {id,fio,birthday} = req.body;
-    id.map(item=>{
-         connection.query(`INSERT into patient VALUES (NULL,'${fio}','${birthday}',NOW(),'${item}')`)
-         connection.query(`UPDATE services SET service_left = service_left-1 WHERE services_id=${item}`)
-    });
-   return res.json({'message':'Пользователь добавлен'})
-});
 router.post('/showPatient',async(req,res)=>{
     const {id} = req.body;
     await connection.query(`SELECT * from patient WHERE service_id='${id}'`)

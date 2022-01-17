@@ -119,13 +119,13 @@ function reducer(state = initialState,action){
                 error:'',
                 loading:false,
                 editableService: state.editableService.map(item=>{
-                    if(item.services_id === action.payload.id){
+                    if(item.service_id === action.payload.service_id){
                         return {
                             ...item,
-                            service_name:action.payload.serviceName,
-                            service_cost:action.payload.serviceCost,
-                            service_count:action.payload.serviceCount,
-                            service_left:action.payload.serviceCount
+                            service_name:action.payload.service_name,
+                            service_cost:action.payload.service_cost,
+                            service_count:action.payload.service_count,
+                            service_left:action.payload.service_count
                         }
                     }else{
                         return item

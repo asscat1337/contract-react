@@ -11,6 +11,9 @@ import EditIcon from '@mui/icons-material/Edit';
 
 
 function Edit(){
+
+    /// TODO : исправить редактирование услуги,применив Redux вместо useStates
+
     const [open,setOpen] = useState(false);
     const [currentEdit,setCurrentEdit] = useState([]);
     const serviceData = useSelector(state=>state.dashboard.editableService);
@@ -21,9 +24,17 @@ function Edit(){
         dispatch(actionGetCurrentService(params.id));
     },[]);
 
+
     const onSubmitForm=data=>{
        if(open) {
-           dispatch(actionEditService(data))
+
+           const editObject = {
+               ...data,
+               service_id:currentEdit.service_id,id:params.id,
+               prevSumService:currentEdit.service_cost * currentEdit.service_count
+           }
+           dispatch(actionEditService(editObject))
+           setCurrentEdit(editObject)
        }else{
            return dispatch(actionsAddService({id:params.id,data}))
        }
@@ -33,7 +44,7 @@ function Edit(){
         setCurrentEdit(data);
     }
     const onDeleteService=(data)=>{
-        dispatch(actionDeleteService(data.services_id))
+        dispatch(actionDeleteService({id:data.services_id,deletedId:params.id}))
     }
     return (
         <Box sx={{flexGrow:1}}>
@@ -47,7 +58,6 @@ function Edit(){
                         title="Редактирование"
                     >
                         <div>
-                            <h1>Hello</h1>
                             <FormService
                                 onSubmitForm={onSubmitForm}
                                 editData={currentEdit}
@@ -85,7 +95,7 @@ function Edit(){
                 <h5>Список услуг</h5>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
-                        <Paper key={item.services_id}>
+                        <Paper key={item.service_id}>
                             <div>Название услуги:{item.service_name}</div>
                             <div>Количество:{item.service_count}</div>
                             <div>Стоимость услуги:{item.service_cost}</div>

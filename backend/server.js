@@ -25,10 +25,12 @@ app.use(express.json({extended: true}));
 const auth = require('./router/auth');
 const dashboard = require('./router/dashboard');
 const admin = require('./router/admin');
+const patient = require('./router/patient')
 
 app.use('/Auth',auth)
 app.use('/dashboard',dashboard);
-app.use('/admin',admin)
+app.use('/admin',admin);
+app.use('/patient',patient)
 
 app.get('*',(req,res)=>{
     res.sendFile(path.resolve(__dirname,'../build','index.html'))
