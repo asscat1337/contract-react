@@ -19,6 +19,9 @@ function actionsLoginUser(user,navigate){
                 sessionStorage.setItem('auth',data.success);
                 sessionStorage.setItem('token',data.token)
                 navigate('/dashboard',{replace:true})
+                if(data.role === 4){
+                    navigate('/admin',{replace:true})
+                }
             })
             .catch((error)=>dispatch(errorUser(error.response.data)))
     }
