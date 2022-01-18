@@ -1,5 +1,4 @@
 import {LOGIN_USER,
-    REGISTER_USER,
     ERROR_AUTH,
     LOAD_AUTH,
     LOGOUT_USER,
@@ -28,11 +27,6 @@ function AuthReducer(state=initialState,action){
                 auth:true,
                 error: ''
             };
-        case REGISTER_USER :{
-            return {
-                user:action.payload
-            }
-        }
         case LOAD_AUTH :
             return {
                 ...state,
@@ -71,7 +65,6 @@ export const errorUser=(payload)=>({type:ERROR_AUTH,payload});
 export const loadAuthUser=()=>({type:LOAD_AUTH});
 export const logoutUser=()=>({type:LOGOUT_USER});
 export const resetPassword=(payload)=>({type:RESET_PASSWORD,payload});
-export const registerUser=(payload)=>({type:REGISTER_USER,payload});
 export const getRole=(payload)=>({type:GET_ROLE,payload});
 
 export default AuthReducer

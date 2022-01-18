@@ -3,9 +3,11 @@ import {loginUser,
     loadAuthUser,
     logoutUser,
     resetPassword,
-    registerUser,
     getRole
 } from "../reducers/AuthReducer";
+import {registerUser} from "../reducers/adminReducer";
+
+
 import axios from "axios";
 
 
@@ -20,7 +22,7 @@ function actionsLoginUser(user,navigate){
                 sessionStorage.setItem('token',data.token)
                 navigate('/dashboard',{replace:true})
                 if(data.role === 4){
-                    navigate('/admin',{replace:true})
+                    navigate('/admin')
                 }
             })
             .catch((error)=>dispatch(errorUser(error.response.data)))
@@ -41,7 +43,7 @@ function actionsResetPassword(data){
 function actionsRegisterUser(data){
     return dispatch=>{
         axios.post(`${process.env.REACT_APP_BASE_URL}/auth/register`,data)
-            .then(()=>dispatch(registerUser(data)))
+            .then(({data})=>dispatch(registerUser(data)))
             .catch(error=>dispatch(errorUser(error)))
     }
 }
@@ -54,4 +56,10 @@ function actionsGetRole() {
 }
 
 
-export {actionsLoginUser,actionsLogoutUser,actionsResetPassword,actionsRegisterUser,actionsGetRole}
+export {
+    actionsLoginUser,
+    actionsLogoutUser,
+    actionsResetPassword,
+    actionsRegisterUser,
+    actionsGetRole
+}

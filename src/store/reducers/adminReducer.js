@@ -1,4 +1,4 @@
-import {GET_USERS,DELETE_USER} from "../types";
+import {GET_USERS,DELETE_USER,REGISTER_USER} from "../types";
 
 const initialState = {
     list:[],
@@ -20,6 +20,11 @@ function adminReducer(state = initialState,action) {
                     ...state,
                     list: state.list.filter(item=>item.user_id !== action.payload)
                 }
+            case REGISTER_USER :
+                return {
+                    ...state,
+                    list:[...state.list,action.payload.newUser]
+                }
             default :
                 return state
         }
@@ -27,5 +32,6 @@ function adminReducer(state = initialState,action) {
 
 export const getUsers=(payload)=>({type:GET_USERS,payload})
 export const deleteUser=(payload)=>({type:DELETE_USER,payload})
+export const registerUser=(payload)=>({type:REGISTER_USER,payload});
 
 export default adminReducer

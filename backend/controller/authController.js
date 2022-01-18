@@ -74,16 +74,18 @@ class AuthController {
             if(candidate.length){
                 return res.status(400).json({message:'Пользователь уже существует'})
             }
-                await Users.create({
+             const newUser =  await Users.create({
                     login:email,
                     password:hashedPassword,
                     birthday,
                     fio,
                     roleRolesId:role,
                     branchBranchId:branch
-                }).then(()=>res.status(200).json({message:'Пользователь добавлен'}))
+                })
+                 if(newUser){
+                   return res.status(200).json({message:'Пользователь добавлен',newUser})
+                 }
         }catch (e) {
-            console.log(e)
             return res.status(500).json({error:'Произошла ошибка'})
         }
     }

@@ -33,7 +33,8 @@ function FormRegister(){
     },[])
 
     const onSubmit=(data)=>{
-       dispatch(actionsRegisterUser(data))
+        console.log(data)
+        dispatch(actionsRegisterUser(data))
     };
 
     return(
