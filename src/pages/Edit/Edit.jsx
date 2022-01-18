@@ -44,7 +44,7 @@ function Edit(){
         setCurrentEdit(data);
     }
     const onDeleteService=(data)=>{
-        dispatch(actionDeleteService({id:data.services_id,deletedId:params.id}))
+        dispatch(actionDeleteService({id:params.id,deletedId:data.service_id}))
     }
     return (
         <Box sx={{flexGrow:1}}>

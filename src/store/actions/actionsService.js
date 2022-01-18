@@ -21,10 +21,11 @@ function actionGetCurrentService(id){
             .catch(error=>dispatch(errorService(error)))
     }
 }
-function actionDeleteService(data){
+function actionDeleteService(obj){
     return dispatch=>{
-        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,data)
-            .then(()=>dispatch(deleteService(data.id)))
+        const {id,deletedId} = obj
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,{id,deletedId})
+            .then(()=>dispatch(deleteService({id,deletedId})))
             .catch(error=>dispatch(errorService(error)))
     }
 }

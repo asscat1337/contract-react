@@ -13,8 +13,9 @@ import typeReducer from "./reducers/typeReducer";
 
 const persistConfig = {
     key:'root',
-    storage:sessionStorage
+    storage:sessionStorage,
 }
+
 
 const rootReducer=combineReducers({
     dashboard:reducer,

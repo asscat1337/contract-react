@@ -78,16 +78,15 @@ function reducer(state = initialState,action){
             return {
                 ...state,
                 data: state.data.map(item=>{
-                    console.log(action.payload)
-                    if(item.contract_id===Number(action.payload.agreement_id)){
+                    if(item.contract_id===Number(action.payload.data.id)){
                         return{
                             ...item,
-                            children:[...item.children,action.payload]
+                            children:[...item.children,action.payload.data]
                         }
                     }
                     return item
                 }),
-                editableService: [...state.editableService,action.payload]
+                editableService: [...state.editableService,action.payload.data]
             }
         }
         case ERROR_SERVICE : {
@@ -110,7 +109,7 @@ function reducer(state = initialState,action){
                 ...state,
                 error:'',
                 loading: false,
-                editableService: state.editableService.filter(item=>item.services_id !== action.payload)
+                editableService: state.editableService.filter(item=>item.service_id !== action.payload.deletedId)
             }
         }
         case EDIT_SERVICE : {

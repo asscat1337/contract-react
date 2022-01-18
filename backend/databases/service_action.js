@@ -42,22 +42,25 @@ class Service_action {
                 }
             }
         }
-        async addService(serviceCount,serviceCost,serviceName,id,sum_left){
+        async addService(service_count,service_cost,service_name,id,sum_left){
             try{
               const data = await sequelize.query(`INSERT INTO service_${id} 
                     (service_id,service_name,service_cost,service_count,agreement_id,service_left)
-                    VALUES (NULL,'${serviceName}','${serviceCost}','${serviceCount}','${id}','${serviceCount}')`,
+                    VALUES (NULL,'${service_name}','${service_cost}','${service_count}','${id}','${service_count}')`,
                    {type:QueryTypes.INSERT})
                 if(data){
                     await Contract.update({
-                        sum_left:sum_left - (serviceCount*serviceCost)
+                        sum_left:sum_left - (service_count*service_cost)
                     },{where:{
                         contract_id:id
                         }
                     })
                     return {
                         message:'Запись успешно добавлена!',
-                        code:200
+                        code:200,
+                        data:{
+                            service_name,service_cost,service_count,id
+                        }
                     }
                 }
             }catch (e) {
@@ -77,7 +80,7 @@ class Service_action {
         }
         async deleteService(id,deletedId){
             try{
-                const data = await sequelize.query(`DELETE FROM service_${id} WHERE services_id=${deletedId}`,{type:QueryTypes.DELETE})
+                const data = await sequelize.query(`DELETE FROM service_${id} WHERE service_id=${deletedId}`,{type:QueryTypes.DELETE})
                 if(data){
                     return {
                         message:'Услуга успешно удалена'

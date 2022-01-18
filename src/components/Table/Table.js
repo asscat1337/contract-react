@@ -169,9 +169,10 @@ const {
                                  <MenuItem value={number} key={number}>Показать {number}</MenuItem>
                              ))}
                          </Select>
+                         <span>Перейти на страницу:</span>
                          <TextField
                              type="number"
-                             variant="outlined"
+                             variant="standard"
                              defaultValue={pageIndex+1}
                              onChange={(e)=>onChangeInput(e)}
                          />

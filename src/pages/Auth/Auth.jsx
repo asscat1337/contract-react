@@ -7,8 +7,8 @@ import {Grid, Paper,TextField,Button,Checkbox,FormControlLabel,FormGroup,Stack,C
 import {useDispatch,useSelector} from "react-redux";
 import {actionsLoginUser} from "../../store/actions/actionsAuthUser";
 import FormResetPassword from "../../components/Form/FormResetPassword";
-import CustomSnackBar from "../../components/Snackbar/SnackBar";
 import styles from "./auth.module.scss"
+import CustomSnackBar from "../../components/Snackbar/SnackBar";
 
 
 
@@ -17,10 +17,12 @@ function Auth(){
     const [open,setOpen] = React.useState(false);
     const [showPassword,setShowPassword] = React.useState(false);
     const [showResetForm,setShowResetForm] = React.useState(false);
+    const [showMessage,setShowMessage] = React.useState(false)
     const dispatch = useDispatch()
-    const message = useSelector(state=>state.auth.message);
     const isAuth = useSelector(state=>state.auth.auth);
     const role = useSelector(state=>state.auth.user.role);
+    const message = useSelector(state=>state.auth?.message);
+    const loading = useSelector(state=>state.auth.loading)
 
     const schema = yup.object().shape({
         login:yup.string().required(),
@@ -30,20 +32,22 @@ function Auth(){
         resolver:yupResolver(schema)
     });
 
-    React.useEffect(()=>{
-        /// костыль
-         if(isAuth){
-          navigate('/dashboard')
-        }
-         if(role === 4) {
-             navigate('/admin')
-         }
-         ///
-    },[isAuth,message]);
+    // React.useEffect(()=>{
+    //     /// костыль
+    //      if(isAuth){
+    //       navigate('/dashboard')
+    //     }
+    //      if(role === 4) {
+    //          navigate('/admin')
+    //      }
+    //      ///
+    // },[isAuth]);
 
     const onSubmitAuth=data=>{
-         dispatch(actionsLoginUser(data));
-         setOpen(true);
+          dispatch(actionsLoginUser(data,navigate));
+          setShowMessage(true)
+          // navigate('/dashboard')
+          setOpen(true);
     }
     const onShowPassword = ()=>{
         setShowPassword(!showPassword)
@@ -60,15 +64,15 @@ function Auth(){
     return(
         <>
             <CssBaseline/>
-        <Grid>
-            {message &&
-            <CustomSnackBar
-                open={open}
-                handleClose={handleClose}
-                message={message.message}
-                error={message.error}
-            />
+            {(showMessage && message ) &&
+                <CustomSnackBar
+                    open={open}
+                    handleClose={handleClose}
+                    message={message.message}
+                    error={message.error}
+                />
             }
+        <Grid>
             <Paper elevation={10} className={styles.paper}>
                 <Grid align="center">
                     <h2>Авторизация</h2>
@@ -110,6 +114,11 @@ function Auth(){
                     {showResetForm && (
                      <FormResetPassword
                         login={getValues("login")}
+                        handleClose={handleClose}
+                        open={open}
+                        message={message}
+                        showMessage={showMessage}
+                        setShowMessage={setShowMessage}
                      />
                     )}
                 </Grid>

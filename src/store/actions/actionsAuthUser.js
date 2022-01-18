@@ -10,15 +10,15 @@ import axios from "axios";
 
 
 
-
-function actionsLoginUser(user){
+function actionsLoginUser(user,navigate){
     return dispatch=>{
-        dispatch(loadAuthUser())
+         dispatch(loadAuthUser())
         axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`,user)
             .then(({data})=>{
                 dispatch(loginUser(data))
                 sessionStorage.setItem('auth',data.success);
                 sessionStorage.setItem('token',data.token)
+                navigate('/dashboard',{replace:true})
             })
             .catch((error)=>dispatch(errorUser(error.response.data)))
     }

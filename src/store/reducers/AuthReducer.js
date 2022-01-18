@@ -8,6 +8,7 @@ import {LOGIN_USER,
 } from "../types";
 
 
+
 const initialState={
     user:{},
     auth:false,
@@ -16,6 +17,7 @@ const initialState={
     roles:[],
     message:''
 };
+
 
 function AuthReducer(state=initialState,action){
     switch (action.type) {

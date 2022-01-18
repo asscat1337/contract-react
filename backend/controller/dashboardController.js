@@ -101,9 +101,9 @@ class DashboardController {
                 raw:true
             })
 
-            const {serviceCount,serviceCost,serviceName} = req.body.data;
+            const {service_count,service_cost,service_name} = req.body.data;
             const {sum_left} = findContract[0]
-            const data = await ServiceAction.addService(serviceCount,serviceCost,serviceName,id,sum_left)
+            const data = await ServiceAction.addService(service_count,service_cost,service_name,id,sum_left)
 
             return res.status(200).json(data)
 

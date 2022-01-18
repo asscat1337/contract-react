@@ -33,6 +33,7 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     },[editData]);
 
     const onSubmit=data=>{
+        console.log(data)
         if(data.serviceCost*data.serviceCount > editContract){
             setError('Сумма превышает')
             setOpen(true)

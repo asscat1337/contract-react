@@ -6,9 +6,11 @@ import {useSelector} from "react-redux";
 
 function ProtectedRoute({component:Component,roles}){
     const roleUser = useSelector(state=>state.auth.user.role);
-    const isAuth = sessionStorage.getItem('auth');
+    const isAuth = useSelector(state =>state.auth.auth)
     const location = useLocation();
     const checkUserRole = roles.find(role=>role === roleUser);
+
+    console.log(isAuth)
     if(isAuth && checkUserRole){
         return <Component/>
     }
