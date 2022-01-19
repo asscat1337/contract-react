@@ -23,9 +23,9 @@ function actionGetCurrentService(id){
 }
 function actionDeleteService(obj){
     return dispatch=>{
-        const {id,deletedId} = obj
-        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,{id,deletedId})
-            .then(()=>dispatch(deleteService({id,deletedId})))
+        const {agreement_id,service_id} = obj
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,obj)
+            .then(()=>dispatch(deleteService({agreement_id,service_id})))
             .catch(error=>dispatch(errorService(error)))
     }
 }

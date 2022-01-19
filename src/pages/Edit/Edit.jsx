@@ -8,6 +8,7 @@ import {CssBaseline,Grid,Paper,Box,Button} from "@mui/material";
 import FormContract from "../../components/Form/FormContract";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import NumberFormat from "react-number-format";
 
 
 function Edit(){
@@ -44,7 +45,7 @@ function Edit(){
         setCurrentEdit(data);
     }
     const onDeleteService=(data)=>{
-        dispatch(actionDeleteService({id:params.id,deletedId:data.service_id}))
+        dispatch(actionDeleteService(data))
     }
     return (
         <Box sx={{flexGrow:1}}>
@@ -98,7 +99,9 @@ function Edit(){
                         <Paper key={item.service_id}>
                             <div>Название услуги:{item.service_name}</div>
                             <div>Количество:{item.service_count}</div>
-                            <div>Стоимость услуги:{item.service_cost}</div>
+                            <div>Стоимость услуги:
+                                <NumberFormat value={item.service_cost} displayType="text" prefix="₽" thousandSeparator/>
+                            </div>
                             <div>
                                 <Button
                                     onClick={()=>onDeleteService(item)}

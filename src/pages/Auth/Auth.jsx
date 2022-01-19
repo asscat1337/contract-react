@@ -5,7 +5,7 @@ import * as yup from 'yup'
 import {yupResolver}  from "@hookform/resolvers/yup";
 import {Grid, Paper,TextField,Button,Checkbox,FormControlLabel,FormGroup,Stack,CssBaseline} from "@mui/material";
 import {useDispatch,useSelector} from "react-redux";
-import {actionsLoginUser} from "../../store/actions/actionsAuthUser";
+import {actionsLoginUser,actionsResetPassword} from "../../store/actions/actionsAuthUser";
 import FormResetPassword from "../../components/Form/FormResetPassword";
 import styles from "./auth.module.scss"
 import CustomSnackBar from "../../components/Snackbar/SnackBar";
@@ -17,12 +17,8 @@ function Auth(){
     const [open,setOpen] = React.useState(false);
     const [showPassword,setShowPassword] = React.useState(false);
     const [showResetForm,setShowResetForm] = React.useState(false);
-    const [showMessage,setShowMessage] = React.useState(false)
     const dispatch = useDispatch()
-    const isAuth = useSelector(state=>state.auth.auth);
-    const role = useSelector(state=>state.auth.user.role);
     const message = useSelector(state=>state.auth?.message);
-    const loading = useSelector(state=>state.auth.loading)
 
     const schema = yup.object().shape({
         login:yup.string().required(),
@@ -32,21 +28,9 @@ function Auth(){
         resolver:yupResolver(schema)
     });
 
-    // React.useEffect(()=>{
-    //     /// костыль
-    //      if(isAuth){
-    //       navigate('/dashboard')
-    //     }
-    //      if(role === 4) {
-    //          navigate('/admin')
-    //      }
-    //      ///
-    // },[isAuth]);
 
     const onSubmitAuth=data=>{
           dispatch(actionsLoginUser(data,navigate));
-          setShowMessage(true)
-          // navigate('/dashboard')
           setOpen(true);
     }
     const onShowPassword = ()=>{
@@ -54,7 +38,6 @@ function Auth(){
     }
     const onResetPassword=()=>{
         setShowResetForm(!showResetForm);
-        setOpen(true)
     }
     const handleClose=(event,reason)=>{
         if(reason==='clickaway') return
@@ -64,7 +47,7 @@ function Auth(){
     return(
         <>
             <CssBaseline/>
-            {(showMessage && message ) &&
+            {(open && message ) &&
                 <CustomSnackBar
                     open={open}
                     handleClose={handleClose}
@@ -114,11 +97,7 @@ function Auth(){
                     {showResetForm && (
                      <FormResetPassword
                         login={getValues("login")}
-                        handleClose={handleClose}
-                        open={open}
-                        message={message}
-                        showMessage={showMessage}
-                        setShowMessage={setShowMessage}
+                        setOpen={setOpen}
                      />
                     )}
                 </Grid>

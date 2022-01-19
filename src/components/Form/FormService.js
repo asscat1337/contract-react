@@ -34,13 +34,13 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
 
     const onSubmit=data=>{
         console.log(data)
-        if(data.serviceCost*data.serviceCount > editContract){
+        if(data.service_cost*data.service_count > editContract || data.service_cost > editContract){
             setError('Сумма превышает')
             setOpen(true)
         }else{
-            const isEditableData = editable ? ({id:editData.services_id,...data}) : (data);
+            const isEditableData = editable ? ({id:editData.service_id,...data}) : (data);
             onSubmitForm(isEditableData);
-            setMessage('Услуга добавлена!');
+            setMessage(editable ? 'Услуга отредактирована!' : 'Услуга добавлена!' );
             setOpen(true)
         }
         if(!editable){

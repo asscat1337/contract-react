@@ -61,7 +61,6 @@ class DashboardController {
             const tables_length =  await ServiceAction.ActionCheckTable(id)
             if(tables_length.length){
                 const data = await ServiceAction.showService(id)
-                console.log(data)
                 return res.json(data)
             }else{
                 await ServiceAction.createService(id)
@@ -74,21 +73,24 @@ class DashboardController {
     async deleteContract(req,res,next){
         try{
             const {current} = req.body
-            await Contract.destroy({where:{
+            const deletedData = await Contract.destroy({where:{
                 contract_id:current
                 }
             })
-                .then(async ()=>{
+            if(deletedData){
+                const checkTable = await ServiceAction.ActionCheckTable(current)
+                const checkPatient = await PatientAction.checkTable(current)
+                if(checkTable.length){
                     await ServiceAction.dropTable(current)
+                }
+                if(checkPatient.length){
                     await PatientAction.dropTable(current)
-                })
-        }catch (e) {
-            res.send(e).status(500)
-        }
-        finally {
-            return {
-                message:'Запись успешно удалена!'
+                }
+                return res.status(200).json({'message':'Удалено'})
             }
+        }catch (e) {
+            console.log(e)
+            res.status(500).send(e)
         }
     }
     async addService(req,res,next){
@@ -114,15 +116,15 @@ class DashboardController {
     async editCurrentService(req,res){
         try{
             const {id} = req.params;
-
             const checkService = await ServiceAction.ActionCheckTable(id)
 
             if(checkService.length){
                 const data = await ServiceAction.showService(id)
 
-                return res.status(200).json(data)
+                return res.status(200).json({data:data})
             }else {
                 await ServiceAction.createService(id)
+                return res.status(200).json({message:'Таблица успешно создана!',data:[]})
             }
 
         }catch (e) {
@@ -131,8 +133,9 @@ class DashboardController {
     }
     async deleteService(req,res,next){
         try{
-             const {id,deletedId} = req.body;
-             const data = await ServiceAction.deleteService(id,deletedId)
+             const {agreement_id,service_id,service_cost,service_count} = req.body;
+             console.log(req.body)
+             const data = await ServiceAction.deleteService(agreement_id,service_id,service_cost,service_count)
 
             return res.status(200).json(data)
 

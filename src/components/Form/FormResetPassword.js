@@ -10,7 +10,7 @@ import {actionsResetPassword} from "../../store/actions/actionsAuthUser";
 import CustomSnackBar from "../Snackbar/SnackBar";
 
 
-function FormResetPassword({login,handleClose,open,message,showMessage,setShowMessage}){
+function FormResetPassword({login,setOpen}){
 
     const [values,setValues] = React.useState(false)
     const dispatch = useDispatch();
@@ -27,8 +27,8 @@ function FormResetPassword({login,handleClose,open,message,showMessage,setShowMe
 
 
     const onSubmitReset=(data)=>{
-        setShowMessage(true)
         dispatch(actionsResetPassword({login:login,...data}))
+        setOpen(true)
 
     };
 
@@ -38,14 +38,6 @@ function FormResetPassword({login,handleClose,open,message,showMessage,setShowMe
 
     return(
         <>
-        {showMessage ?
-                (<CustomSnackBar
-                    open={open}
-                    handleClose={handleClose}
-                    message={message.message}
-                    error={message.error}
-                />) : null
-        }
             <form action="" onSubmit={handleSubmit(onSubmitReset)}>
                 <Stack spacing={2} direction="column">
                 <OutlinedInput
@@ -64,7 +56,7 @@ function FormResetPassword({login,handleClose,open,message,showMessage,setShowMe
                     {...register('resetPassword')}
                 />
                 <OutlinedInput
-                    type="password"
+                    type={values ? "text" : "password"}
                     placeholder="Подвердите новый пароль"
                     endAdornment={
                         <InputAdornment position="end">

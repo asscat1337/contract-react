@@ -59,7 +59,8 @@ class Service_action {
                         message:'Запись успешно добавлена!',
                         code:200,
                         data:{
-                            service_name,service_cost,service_count,id
+                            service_name,service_cost,service_count,
+                            agreement_id:id,service_id:data[0]
                         }
                     }
                 }
@@ -78,16 +79,25 @@ class Service_action {
                }
             }
         }
-        async deleteService(id,deletedId){
+        async deleteService(id,service_id,service_cost,service_count){
             try{
-                const data = await sequelize.query(`DELETE FROM service_${id} WHERE service_id=${deletedId}`,{type:QueryTypes.DELETE})
-                if(data){
+                 await sequelize.query(`DELETE FROM service_${id} WHERE service_id=${service_id}`,{type:QueryTypes.DELETE})
+                     .then(()=>{
+                     })
+                   const selectContract = await Contract.findByPk(id)
+                    await Contract.update({
+                        sum_left:selectContract.sum_left + (service_count*service_cost)
+                    },{
+                        where:{
+                            contract_id:id
+                        }
+                    })
                     return {
                         message:'Услуга успешно удалена'
                     }
-                }
 
             }catch (e) {
+                console.log(e)
                 return e
             }
         }

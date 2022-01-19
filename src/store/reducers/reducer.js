@@ -101,7 +101,7 @@ function reducer(state = initialState,action){
                 ...state,
                 error:'',
                 loading:false,
-                editableService: action.payload
+                editableService: action.payload.data
             }
         }
         case DELETE_SERVICE : {
@@ -109,7 +109,7 @@ function reducer(state = initialState,action){
                 ...state,
                 error:'',
                 loading: false,
-                editableService: state.editableService.filter(item=>item.service_id !== action.payload.deletedId)
+                editableService: state.editableService.filter(item=>item.service_id !== action.payload.service_id)
             }
         }
         case EDIT_SERVICE : {
