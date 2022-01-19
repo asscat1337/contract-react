@@ -3,34 +3,12 @@ import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
-import {TextField,Button,FormGroup,FormControlLabel,Checkbox,FormHelperText,Grid} from "@mui/material";
+import {TextField,Button,Grid} from "@mui/material";
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import NumberFormat from "react-number-format";
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
 
-
-const NumberFormatCustom = React.forwardRef((props,ref)=>{
-    const {onChange,...other} = props
-    return (
-        <NumberFormat
-            {...other}
-            getInputRef={ref}
-            onValueChange={(values)=>{
-                onChange({
-                    target:{
-                        name:props.name,
-                        value:values.value
-                    }
-                })
-            }}
-            thousandSeparator
-            isNumericString
-            prefix="₽"
-        />
-    )
-})
 
 
 function FormContract({editContract = {},editable = false}){
@@ -155,6 +133,7 @@ function FormContract({editContract = {},editable = false}){
                         control={control}
                         render={({field:{onChange}})=>(
                             <TextField
+                                required
                                 fullWidth
                                 id="sum"
                                 label="Сумма"
@@ -162,9 +141,7 @@ function FormContract({editContract = {},editable = false}){
                                 error={!!errors.sum}
                                 defaultValue={editable ? editContract.sum : ""}
                                 margin="normal"
-                                // InputProps={{
-                                //     inputComponent:NumberFormatCustom
-                                // }}
+                                sx={{width:'491px'}}
                             />
                         )}
                     />

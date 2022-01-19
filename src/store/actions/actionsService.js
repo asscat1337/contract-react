@@ -3,7 +3,8 @@ import {addService,
     errorService,
     showEditService,
     deleteService,
-    editService
+    editService,
+    loadService
 } from "../reducers/reducer";
 
 
@@ -16,6 +17,7 @@ function actionsAddService(current){
 }
 function actionGetCurrentService(id){
     return dispatch=>{
+        dispatch(loadService())
         axios.get(`${process.env.REACT_APP_BASE_URL}/dashboard/getService/${id}`)
             .then(({data})=>dispatch(showEditService(data)))
             .catch(error=>dispatch(errorService(error)))

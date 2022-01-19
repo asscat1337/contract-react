@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useSelector} from "react-redux";
 import {useTable,useFilters,useExpanded,useGlobalFilter,usePagination} from 'react-table'
 import {Filter,DefaultColumnFilter,GlobalFilter} from "./Filter";
@@ -17,7 +17,6 @@ import TextField from "@mui/material/TextField"
 import {CircularProgress} from "@mui/material";
 import {Checkbox,Grid} from "@material-ui/core";
 import {TableCheckboxes} from "./TableCheckboxes";
-import AlertDialog from "../Modal/AlertDialog";
 
 const defaultPropGetter = ()=>({});
 

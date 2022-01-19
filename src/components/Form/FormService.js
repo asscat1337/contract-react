@@ -35,7 +35,7 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     const onSubmit=data=>{
         console.log(data)
         if(data.service_cost*data.service_count > editContract || data.service_cost > editContract){
-            setError('Сумма превышает')
+            setError('Сумма превышает стоимость контракта/договора')
             setOpen(true)
         }else{
             const isEditableData = editable ? ({id:editData.service_id,...data}) : (data);

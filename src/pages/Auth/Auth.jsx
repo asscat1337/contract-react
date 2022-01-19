@@ -1,11 +1,11 @@
 import React from 'react';
-import {useNavigate,useLocation} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {useForm} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver}  from "@hookform/resolvers/yup";
 import {Grid, Paper,TextField,Button,Checkbox,FormControlLabel,FormGroup,Stack,CssBaseline} from "@mui/material";
 import {useDispatch,useSelector} from "react-redux";
-import {actionsLoginUser,actionsResetPassword} from "../../store/actions/actionsAuthUser";
+import {actionsLoginUser} from "../../store/actions/actionsAuthUser";
 import FormResetPassword from "../../components/Form/FormResetPassword";
 import styles from "./auth.module.scss"
 import CustomSnackBar from "../../components/Snackbar/SnackBar";

@@ -30,7 +30,7 @@ function SubRows({current,setModal,setPatientId}) {
     const columns = useMemo(()=>[
         {
             Header:'Номер услуги',
-            accessor:(d)=>d.services_id
+            accessor:(d)=>d.service_id
         },
         {
             Header:'Название',

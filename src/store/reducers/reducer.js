@@ -13,6 +13,7 @@ import {
     EDIT_CONTRACT,
     UPLOAD_CONTRACT,
     GET_EDIT_CONTRACT,
+    LOAD_SERVICE,
 } from "../types";
 
 const initialState = {
@@ -151,6 +152,11 @@ function reducer(state = initialState,action){
                     }
                 })
             }
+        case LOAD_SERVICE :
+            return {
+                ...state,
+                loading:true
+            }
         default : return state
     }
 }
@@ -168,5 +174,7 @@ export const editService=(payload)=>({type:EDIT_SERVICE,payload});
 export const editContract=payload=>({type:GET_EDIT_CONTRACT,payload});
 export const addContractFromFile=(payload)=>({type:UPLOAD_CONTRACT,payload});
 export const editDataContract=(payload)=>({type:EDIT_CONTRACT,payload});
+export const loadService=()=>({type:LOAD_SERVICE})
+
 
 export default reducer

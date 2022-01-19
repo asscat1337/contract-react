@@ -10,7 +10,6 @@ function ProtectedRoute({component:Component,roles}){
     const location = useLocation();
     const checkUserRole = roles.find(role=>role === roleUser);
 
-    console.log(isAuth)
     if(isAuth && checkUserRole){
         return <Component/>
     }

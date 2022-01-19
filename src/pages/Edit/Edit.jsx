@@ -1,10 +1,14 @@
 import {useEffect,useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {useDispatch,useSelector} from "react-redux";
-import {actionsAddService,actionGetCurrentService,actionDeleteService,actionEditService} from "../../store/actions/actionsService";
+import {actionsAddService,
+    actionGetCurrentService,
+    actionDeleteService,
+    actionEditService
+} from "../../store/actions/actionsService";
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
-import {CssBaseline,Grid,Paper,Box,Button} from "@mui/material";
+import {CssBaseline,Grid,Paper,Box,Button,CircularProgress} from "@mui/material";
 import FormContract from "../../components/Form/FormContract";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,6 +23,7 @@ function Edit(){
     const [currentEdit,setCurrentEdit] = useState([]);
     const serviceData = useSelector(state=>state.dashboard.editableService);
     const editContract = useSelector(state=>state.dashboard.editContract)
+    const isLoading = useSelector(state=>state.dashboard.loading)
     const params = useParams();
     const dispatch = useDispatch();
     useEffect(()=>{
@@ -47,12 +52,17 @@ function Edit(){
     const onDeleteService=(data)=>{
         dispatch(actionDeleteService(data))
     }
+
+    if(isLoading){
+        return <CircularProgress/>
+    }
+
     return (
         <Box sx={{flexGrow:1}}>
             <h5>Форма редактирования контрактов и услуг</h5>
         <Grid container direction="row" justifyContent="space-around" alignItems="center">
             <CssBaseline/>
-            <Grid item xs={5}>
+            <Grid item xs={6.5}>
                 {
                     open && <Modal
                         onClose={setOpen}
@@ -71,7 +81,7 @@ function Edit(){
                     </Modal>
                 }
             {!open &&
-                <Box sx={{height:350}}>
+                <Box sx={{height:350,width:550}}>
                     <Paper elevation={5} sx={{p:1}}>
                         <h4>Форма добавления услуги</h4>
                         <FormService onSubmitForm={onSubmitForm}>
@@ -82,8 +92,8 @@ function Edit(){
                     </Paper>
                 </Box>
             }
-            <Box sx={{height:550}}>
-                <Paper elevation={5} sx={{p:4}}>
+            <Box sx={{height:550,width:550}}>
+                <Paper elevation={5} sx={{p:3}}>
                     <h4>Форма редактирования контракт/договора </h4>
                     <FormContract
                         editContract={editContract}
@@ -92,7 +102,7 @@ function Edit(){
                 </Paper>
             </Box>
             </Grid>
-            <Grid sx={{height:'130vh'}}>
+            <Grid sx={{height:'130vh'}} item xs={3.5}>
                 <h5>Список услуг</h5>
                 {serviceData?.length ? (
                     serviceData?.map(item=>(
