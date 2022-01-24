@@ -37,13 +37,30 @@ function actionFindService(value) {
     }
 }
 function actionAddDashboard(data) {
-    console.log(data);
+    const {file} = data
+    const formData = new FormData()
+    formData.append('file',file)
     return dispatch=>{
         axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/add`,data)
-            .then(()=>dispatch(addDashboard(data)))
+            .then(({data})=>{
+                dispatch(addDashboard(data))
+                axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file/${data.contract_id}`,formData)
+            })
             .catch((error)=>dispatch(errorDashboard(error)))
     }
 }
+
+async function downloadFile(data){
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/dashboard/download-file/${data.contract_id}`)
+    const blob = await response.blob()
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.download = data.filename
+    document.body.append(link)
+    link.click()
+}
+
 function actionDeleteContract(current) {
     return dispatch=>{
         axios({
@@ -87,5 +104,6 @@ export {
     actionDeleteContract,
     actionEditDataContract,
     actionEditContract,
-    actionAddContractFromFile
+    actionAddContractFromFile,
+    downloadFile
 }

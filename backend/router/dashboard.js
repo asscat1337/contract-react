@@ -23,6 +23,7 @@ router.get('/get-branch',async (req,res)=>{
             return res.json(mappedDepartment)
         })
 })
+router.get('/download-file/:id',dashboardController.downloadFile)
 router.post('/upload-file',multer({storage: storageConfig}).single('file'),dashboardController.uploadFile)
 router.post('/add-department',dashboardController.addDepartment)
 router.get('/add-dog',async (req,res)=>{
@@ -50,6 +51,7 @@ router.post('/addService',dashboardController.addService)
 router.get('/getService/:id',dashboardController.editCurrentService)
 router.post('/findService',dashboardController.findService);
 router.post('/add',dashboardController.addContract);
+router.post('/upload-file/:contractId',multer({storage:storageConfig}).single("file"),dashboardController.uploadContract)
 router.delete('/delete-contract',dashboardController.deleteContract);
 router.post('/delete-service',dashboardController.deleteService);
 router.post('/edit-contract',dashboardController.editContract)

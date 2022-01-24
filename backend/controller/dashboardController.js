@@ -39,15 +39,13 @@ class DashboardController {
     async addContract(req, res, next) {
         try {
             const {department} = req.body
-            await Contract.create({
+            const added = await Contract.create({
                 ...req.body,
                 branch:department,
                 date:dayjs().format('YYYY-MM-DD'),
                 sum_left:req.body.sum
             })
-                .then(() => {
-                    return res.send('ok').status(200)
-                })
+                    return res.status(200).json(added)
         } catch (e) {
             if (e) {
                 res.status(500).send(e)
@@ -55,6 +53,29 @@ class DashboardController {
         }
 
     }
+
+    async uploadContract(req,res,next){
+        try{
+            console.log(req.file)
+            await Contract.update({
+                link:fs.readFileSync(
+                    `./${req.file.path}`
+                ),
+                filename:req.file.filename
+            },{
+                where:{
+                    contract_id:req.params.contractId
+                }
+            })
+
+            return res.status(200).send("ok")
+
+        }catch (e){
+            console.log(e)
+            return res.status(500).json(e)
+        }
+    }
+
     async findService(req,res,next){
         try {
             const {id} = req.body;
@@ -103,9 +124,9 @@ class DashboardController {
                 raw:true
             })
 
-            const {service_count,service_cost,service_name} = req.body.data;
+            const {service_count,service_cost,service_name,date_rendering} = req.body.data;
             const {sum_left} = findContract[0]
-            const data = await ServiceAction.addService(service_count,service_cost,service_name,id,sum_left)
+            const data = await ServiceAction.addService(service_count,service_cost,service_name,dayjs(date_rendering).format('YYYY-MM-DD'),id,sum_left)
 
             return res.status(200).json(data)
 
@@ -143,6 +164,23 @@ class DashboardController {
             return res.send(e).status(500)
         }
     }
+
+    async downloadFile(req,res,next){
+        try{
+            await Contract.findOne({
+                where:{
+                    contract_id:req.params.id
+                },
+                raw:true
+            })
+                .then(data=>res.status(200).send(data.link))
+
+        }catch (e) {
+            console.log(e)
+            return res.status(500).send(e)
+        }
+    }
+
     async editService(req,res,next){
         try{
             const {service_name,service_cost,service_count,prevSumService,id,service_id} = req.body;

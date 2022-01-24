@@ -6,7 +6,7 @@ import Info from "../../components/Info/Info";
 import AppContext from "../../hooks/context";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from 'react-router-dom'
-import {actionDeleteContract, actionGetDashboard,actionEditDataContract} from "../../store/actions/actionsDashboard";
+import {actionDeleteContract, actionGetDashboard,actionEditDataContract,downloadFile} from "../../store/actions/actionsDashboard";
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
@@ -42,7 +42,9 @@ function Dashboard() {
     const onEditContract=(row)=>{
         dispatch(actionEditDataContract(row.original))
     }
-
+    const onDownloadFile=(data)=>{
+        downloadFile(data)
+    }
 
     const columns = useMemo(()=>{
            const tableArray =  [
@@ -57,7 +59,7 @@ function Dashboard() {
                     SubCell:()=>null
                 },
                 {
-                    Header:'Номер контракта',
+                    Header:'Номер ',
                     accessor:d=>d.contract_id
                 },
                 {
@@ -71,6 +73,10 @@ function Dashboard() {
                         <NumberFormat value={row.original.sum} displayType="text" prefix="₽" thousandSeparator/>
                     )
                 },
+               {
+                   Header:'Номер контракт',
+                   accessor:(d)=>d.number_contract
+               },
                 {
                     Header:"Дата заключения",
                     accessor: (d)=>dayjs(d.validity).format('YYYY-MM-DD')
@@ -99,6 +105,15 @@ function Dashboard() {
                     Filter:SelectColumnFilter,
                     filter:'equals'
                 },
+               {
+                   Header:"Файл",
+                   accessor:()=>null,
+                   Cell:({row})=>(
+                       <Button onClick={()=>onDownloadFile(row.original)}>
+                           Скачать файл
+                       </Button>
+                   )
+               }
             ];
         if(roles === 2){
             return [...tableArray,

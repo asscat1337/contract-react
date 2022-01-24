@@ -19,6 +19,7 @@ app.use(express.static(path.resolve(__dirname,'../build')));
 
 const port = process.env.PORT ?? 3005;
 app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 app.use(cors());
 app.use(express.json({extended: true}));
 

@@ -3,12 +3,12 @@ import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
-import {TextField,Button,Grid} from "@mui/material";
+import {TextField,Button,Grid,Input,InputLabel,Paper} from "@mui/material";
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
-
+import {UploadFile} from "@mui/icons-material";
 
 
 function FormContract({editContract = {},editable = false}){
@@ -17,27 +17,27 @@ function FormContract({editContract = {},editable = false}){
     const [error,setError] = React.useState("")
     const schema = yup.object().shape({
          // костыль
+         number_contract:yup.string(),
          sum:editable ? yup.number() : yup.number().required('Введите сумма'),
          description: editable ? yup.string() : yup.string().required('Введите описание'),
          rendering: editable ? yup.date() : yup.date().required('Выберите дату начала'),
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
-         type:editable ? yup.string() : yup.string().required()
+         type:editable ? yup.string() : yup.string().required(),
         //
 
     });
-    const {register,handleSubmit,control,formState:{errors},reset} = useForm({
+    const {register,handleSubmit,control,formState:{errors},reset,getValues} = useForm({
         resolver:yupResolver(schema)
     });
     const dispatch = useDispatch();
     const organization = useSelector(state=>state.organization.organization);
     const department = useSelector(state=>state.department.department);
     const type = useSelector(state=>state.type.types);
-    const totalSumService = useSelector(state=>state.dashboard?.editableService?.map(item=>item.service_cost*item.service_count).reduce((a,b)=>a+b,0))
+    const totalSumService = useSelector(state=>state.dashboard?.editableService?.map(item=>item.service_cost).reduce((a,b)=>a+b,0))
 
     const onSubmitForm=(data)=>{
-        console.log(data)
        if(editable){
          if(data.sum < totalSumService){
             setOpen(true)
@@ -58,12 +58,15 @@ function FormContract({editContract = {},editable = false}){
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
-           console.log(data)
            dispatch(actionAddDashboard(data));
            setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)
            reset({activitiesbefore: ""})
        }
+    }
+
+    const onChangeFile=({target})=>{
+        console.log(target.files)
     }
 
     return(
@@ -77,7 +80,7 @@ function FormContract({editContract = {},editable = false}){
                         message={message}
                     />
             }
-            <form action="" onSubmit={handleSubmit(onSubmitForm)}>
+            <form action="" onSubmit={handleSubmit(onSubmitForm)} encType="multipart/form-data">
                 <Grid item>
                 <Controller
                     control={control}
@@ -118,6 +121,13 @@ function FormContract({editContract = {},editable = false}){
                 <Grid item>
                     <TextField
                         fullWidth
+                        id="number_contract"
+                        label="Номер контракта"
+                        margin="normal"
+                        {...register('number_contract')}
+                    />
+                    <TextField
+                        fullWidth
                         required
                         id="description"
                         label="Предмет договора"
@@ -141,7 +151,7 @@ function FormContract({editContract = {},editable = false}){
                                 error={!!errors.sum}
                                 defaultValue={editable ? editContract.sum : ""}
                                 margin="normal"
-                                sx={{width:'491px'}}
+                                sx={{width:'555px'}}
                             />
                         )}
                     />
@@ -192,6 +202,36 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                   />
+                    <Controller
+                        name="file"
+                        control={control}
+                        render={({field:{onChange,value}})=>(
+                            <Paper elevation={4}>
+                                <InputLabel sx={{display:"flex",justifyContent:"center",flexDirection:"column"}}>
+                                    <Input
+                                        color="primary"
+                                        type="file"
+                                        inputProps={{
+                                            accept:"application/pdf,application/vnd.ms-excel"
+                                        }}
+                                        style={{display:"none"}}
+                                        onChange={({target})=>onChange(target.files[0])}
+                                    />
+                                    <label>{value?.name}</label>
+                                    <Button
+                                        component="span"
+                                        color="primary"
+                                        variant="contained"
+                                        endIcon={
+                                            <UploadFile/>
+                                        }
+                                    >
+                                        Загрузить файл...
+                                    </Button>
+                                </InputLabel>
+                            </Paper>
+                        )}
+                    />
                 <Button variant="outlined" type="submit" onSubmit={onSubmitForm}>
                     {editable ? " Редактировать" : "Добавить"}
                 </Button>

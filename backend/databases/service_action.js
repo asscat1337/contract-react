@@ -10,7 +10,7 @@ class Service_action {
     async createService(id){
         try{
             await sequelize.query(`CREATE TABLE IF NOT EXISTS service_${id} (service_id INT NOT NULL AUTO_INCREMENT,
-        service_name TEXT NOT NULL,service_cost INT NOT NULL,service_count INT NOT NULL,
+        service_name TEXT NOT NULL,service_cost INT NOT NULL,service_count INT NOT NULL,date_rendering DATE NOT NULL,
         agreement_id INT NOT NULL,service_left INT NOT NULL,PRIMARY KEY (service_id))`)
                 .catch(error=>console.log(error))
         }catch (e){
@@ -42,15 +42,15 @@ class Service_action {
                 }
             }
         }
-        async addService(service_count,service_cost,service_name,id,sum_left){
+        async addService(service_count,service_cost,service_name,date_rendering,id,sum_left){
             try{
               const data = await sequelize.query(`INSERT INTO service_${id} 
-                    (service_id,service_name,service_cost,service_count,agreement_id,service_left)
-                    VALUES (NULL,'${service_name}','${service_cost}','${service_count}','${id}','${service_count}')`,
+                    (service_id,service_name,service_cost,service_count,date_rendering,agreement_id,service_left)
+                    VALUES (NULL,'${service_name}','${service_cost}','${service_count}','${date_rendering}','${id}','${service_count}')`,
                    {type:QueryTypes.INSERT})
                 if(data){
                     await Contract.update({
-                        sum_left:sum_left - (service_count*service_cost)
+                        sum_left:sum_left - service_cost
                     },{where:{
                         contract_id:id
                         }
@@ -60,7 +60,7 @@ class Service_action {
                         code:200,
                         data:{
                             service_name,service_cost,service_count,
-                            agreement_id:id,service_id:data[0]
+                            agreement_id:id,service_id:data[0],date_rendering
                         }
                     }
                 }
@@ -86,7 +86,7 @@ class Service_action {
                      })
                    const selectContract = await Contract.findByPk(id)
                     await Contract.update({
-                        sum_left:selectContract.sum_left + (service_count*service_cost)
+                        sum_left:selectContract.sum_left + service_cost
                     },{
                         where:{
                             contract_id:id

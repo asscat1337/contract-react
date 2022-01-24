@@ -9,6 +9,9 @@ const Contract = connection.define('contract',{
         autoIncrement:true,
         type:DataTypes.INTEGER
     },
+    number_contract:{
+        type:DataTypes.TEXT
+    },
     date:{
         type:DataTypes.DATEONLY,
         allowNull:false
@@ -44,6 +47,12 @@ const Contract = connection.define('contract',{
     type:{
         type:DataTypes.TEXT,
         allowNull:false
+    },
+    link:{
+        type:DataTypes.BLOB("long")
+    },
+    filename:{
+        type:DataTypes.TEXT
     }
 },{
     freezeTableName:true,
