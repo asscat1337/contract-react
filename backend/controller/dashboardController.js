@@ -13,7 +13,6 @@ class DashboardController {
         try {
             const {page,size,branch,roles} = req.query;
              const test = Number(roles) === 2 ? {[Op.not]:branch} : {[Op.eq]:branch}
-             console.log(req.query)
             const getData = await Contract.findAndCountAll({
                 where:{
                     branch: test
@@ -23,13 +22,13 @@ class DashboardController {
                 limit:Number(size),
                 offset:Number(page),
             });
+            const noLink = ({link,...rest})=>rest
             const mappedData = getData.rows.map(item => {
-                return {
+                return noLink({
                     ...item,
                     children: []
-                }
+                })
             })
-
             return res.json({count:getData.count,rows:mappedData})
         } catch (e) {
             console.log(e)

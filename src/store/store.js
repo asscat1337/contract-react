@@ -11,6 +11,7 @@ import authReducer from './reducers/AuthReducer'
 import adminReducer from "./reducers/adminReducer";
 import typeReducer from "./reducers/typeReducer";
 
+
 const persistConfig = {
     key:'root',
     storage:sessionStorage,

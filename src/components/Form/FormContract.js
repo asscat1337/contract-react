@@ -124,6 +124,7 @@ function FormContract({editContract = {},editable = false}){
                         id="number_contract"
                         label="Номер контракта"
                         margin="normal"
+                        defaultValue={editContract.number_contract || ""}
                         {...register('number_contract')}
                     />
                     <TextField
