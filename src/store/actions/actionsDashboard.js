@@ -44,7 +44,9 @@ function actionAddDashboard(data) {
         axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/add`,data)
             .then(({data})=>{
                 dispatch(addDashboard(data))
-                axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file/${data.contract_id}`,formData)
+                if(file){
+                    axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file/${data.contract_id}`,formData)
+                }
             })
             .catch((error)=>dispatch(errorDashboard(error)))
     }

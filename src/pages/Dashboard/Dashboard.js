@@ -109,9 +109,11 @@ function Dashboard() {
                    Header:"Файл",
                    accessor:()=>null,
                    Cell:({row})=>(
-                       <Button onClick={()=>onDownloadFile(row.original)}>
-                           Скачать файл
-                       </Button>
+                      row.original.filename ? (
+                          <Button onClick={()=>onDownloadFile(row.original)}>
+                              Скачать файл
+                          </Button>
+                      ):""
                    )
                }
             ];
