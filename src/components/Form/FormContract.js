@@ -4,11 +4,10 @@ import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
 import {TextField,Button,Grid,Input,InputLabel,Paper} from "@mui/material";
-import Select from 'react-select'
-import CreatableSelect from 'react-select/creatable'
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
 import {UploadFile} from "@mui/icons-material";
+import CustomAutoComplete from "../Autocomplete/Autocomplete";
 
 
 function FormContract({editContract = {},editable = false}){
@@ -22,13 +21,13 @@ function FormContract({editContract = {},editable = false}){
          description: editable ? yup.string() : yup.string().required('Введите описание'),
          rendering: editable ? yup.date() : yup.date().required('Выберите дату начала'),
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
-         organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
+          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
          type:editable ? yup.string() : yup.string().required(),
         //
 
     });
-    const {register,handleSubmit,control,formState:{errors},reset,getValues} = useForm({
+    const {register,handleSubmit,control,formState:{errors},reset,getValues,setValue} = useForm({
         resolver:yupResolver(schema)
     });
     const dispatch = useDispatch();
@@ -63,10 +62,6 @@ function FormContract({editContract = {},editable = false}){
            setOpen(true)
            reset({activitiesbefore: ""})
        }
-    }
-
-    const onChangeFile=({target})=>{
-        console.log(target.files)
     }
 
     return(
@@ -164,13 +159,10 @@ function FormContract({editContract = {},editable = false}){
                     name="organization"
                     rules={{required:true}}
                     render={({field:{onChange,value}})=>(
-                        <CreatableSelect
-                            placeholder="Выберите организацию..."
-                            defaultValue={organization.find(org=>org.label === editContract.organization)}
-                            isClearable
-                            isSearchable
+                        <CustomAutoComplete
+                            value={value || organization.find(org=>org.label === editContract.organization)}
                             options={organization}
-                            onChange={val=>val !== null ? onChange(val.label) : false}
+                            onChange={onChange}
                         />
                     )}
                 />
@@ -179,12 +171,9 @@ function FormContract({editContract = {},editable = false}){
                     name="department"
                     rules={{required:true}}
                     render={({field:{onChange,value,ref}})=>(
-                        <CreatableSelect
-                            placeholder="Выберите отделение..."
-                            defaultValue={department.find(dep=>dep.label === editContract.branch)}
-                            onChange={val=>val !== null ? onChange(val.label) : false}
-                            isClearable
-                            isSearchable
+                        <CustomAutoComplete
+                            value={value || department.find(dep=>dep.label === editContract.branch)}
+                            onChange={onChange}
                             options={department}
                         />
                     )}
@@ -195,11 +184,11 @@ function FormContract({editContract = {},editable = false}){
                   <Controller
                     control={control}
                     name="type"
-                    render={({field:{onChange}})=>(
-                        <Select
-                            placeholder="Выберите тип..."
+                    render={({field:{onChange,value}})=>(
+                        <CustomAutoComplete
+                            value={value ?? type.find(type=>type.label === editContract.type)}
                             options={type}
-                            onChange={v=>onChange(v.label)}
+                            onChange={onChange}
                         />
                     )}
                   />
