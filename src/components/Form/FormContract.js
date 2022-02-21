@@ -160,6 +160,7 @@ function FormContract({editContract = {},editable = false}){
                     rules={{required:true}}
                     render={({field:{onChange,value}})=>(
                         <CustomAutoComplete
+                            label="Выберите организацию"
                             value={value || organization.find(org=>org.label === editContract.organization) || editContract.organization}
                             options={organization}
                             onChange={onChange}
@@ -172,6 +173,7 @@ function FormContract({editContract = {},editable = false}){
                     rules={{required:true}}
                     render={({field:{onChange,value,ref}})=>(
                         <CustomAutoComplete
+                            label="Выберите отделение"
                             value={value || department.find(dep=>dep.label === editContract.branch) || editContract.branch}
                             onChange={onChange}
                             options={department}
@@ -186,6 +188,7 @@ function FormContract({editContract = {},editable = false}){
                     name="type"
                     render={({field:{onChange,value}})=>(
                         <CustomAutoComplete
+                            label="Выберите тип"
                             value={value ?? type.find(type=>type.label === editContract.type)}
                             options={type}
                             onChange={onChange}

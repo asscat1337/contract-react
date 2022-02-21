@@ -2,7 +2,7 @@ import {Autocomplete, TextField,createFilterOptions} from "@mui/material";
 import React from "react";
 
 
-export default function CustomAutoComplete({options,onChange,value,defaultValue = ""}){
+export default function CustomAutoComplete({options,onChange,value,defaultValue = "",label}){
     const filter = createFilterOptions()
     return(
         <Autocomplete
@@ -42,7 +42,7 @@ export default function CustomAutoComplete({options,onChange,value,defaultValue 
             renderInput={(params)=>(
                 <TextField
                     {...params}
-                    label="Выберите организацию..."
+                    label={label}
                 />
             )}
         />

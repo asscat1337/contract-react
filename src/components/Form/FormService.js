@@ -36,13 +36,15 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     },[editData]);
 
     const onSubmit=data=>{
-
         if(data.service_cost > editContract.sum){
             setError(`Сумма превышает стоимость контракта/договора`)
+            setMessage('')
             setOpen(true)
             return
         }
         if(data.service_cost > editContract.sum_left){
+            console.log(data.service_cost,editContract.sum_left)
+            setMessage('')
             setError('Сумма превышает остаток контракта/договора')
             setOpen(true)
             return

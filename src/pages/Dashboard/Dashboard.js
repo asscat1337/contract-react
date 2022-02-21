@@ -113,7 +113,7 @@ function Dashboard() {
                           <Button onClick={()=>onDownloadFile(row.original)}>
                               Скачать файл
                           </Button>
-                      ):""
+                      ):"Нет"
                    )
                }
             ];
