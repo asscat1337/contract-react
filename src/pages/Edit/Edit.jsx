@@ -71,7 +71,7 @@ function Edit(){
     return (
         <Box sx={{flexGrow:1}}>
             <h5>Форма редактирования контрактов и услуг</h5>
-            <h5>Остаток составляет {editContract.sum_left}. Полная сумма - {editContract.sum}</h5>
+            <h5>Остаток составляет {editContract?.sum_left}. Полная сумма - {editContract?.sum}</h5>
         <Grid container direction="row" justifyContent="space-around" alignItems="center">
             <CssBaseline/>
             <Grid item xs={6}>
