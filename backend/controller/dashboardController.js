@@ -182,7 +182,7 @@ class DashboardController {
 
     async editService(req,res,next){
         try{
-            const {service_name,service_cost,service_count,prevSumService,id,service_id} = req.body;
+            const {service_name,service_cost,service_count,prevSumService,id,service_id,date_rendering} = req.body;
             const findContract = await Contract.findAll({
                 where:{
                     contract_id:id
@@ -190,7 +190,7 @@ class DashboardController {
                 raw:true
             })
             const {sum_left} = findContract[0]
-            const result =  await ServiceAction.updateService(id,service_name,service_cost,service_count,service_id,sum_left,prevSumService)
+            const result =  await ServiceAction.updateService(id,service_name,service_cost,service_count,service_id,sum_left,prevSumService,date_rendering)
             return res.status(200).json(result)
         }catch (e) {
             return res.send(e).status(500)

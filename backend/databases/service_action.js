@@ -1,6 +1,7 @@
 const sequelize = require('../core/model')
 const {QueryTypes} = require('sequelize')
 const Contract = require('../models/Contract')
+const dayjs = require("dayjs");
 
 class Service_action {
     id
@@ -60,7 +61,7 @@ class Service_action {
                         code:200,
                         data:{
                             service_name,service_cost,service_count,
-                            agreement_id:id,service_id:data[0],date_rendering
+                            agreement_id:id,service_id:data[0],date_rendering,sum_left:sum_left - service_cost
                         }
                     }
                 }
@@ -119,24 +120,25 @@ class Service_action {
             }
         }
 
-        async updateService(id,serviceName,serviceCost,serviceCount,service_id,sum_left,prevSumService){
+        async updateService(id,serviceName,serviceCost,serviceCount,service_id,sum_left,prevSumService,date_renderind){
             try{
 
-                const sumService = serviceCount * serviceCost;
+                const formattedData = dayjs(date_renderind).format('YYYY-MM-DD')
 
                 const checkSum = ()=>{
-                    if(prevSumService > sumService) {
-                        return (prevSumService - sumService) + sum_left
+                    if(prevSumService > serviceCost) {
+                        return (prevSumService - serviceCost) + sum_left
                     }
-                    if(prevSumService < sumService){
-                       return  sum_left - (sumService - prevSumService)
+                    if(prevSumService < serviceCost){
+                       return  sum_left - (serviceCost - prevSumService)
                     }
 
                     return sum_left
                 }
 
                 const data = await sequelize.query(`UPDATE service_${id} SET 
-                        service_name = '${serviceName}',service_cost = '${serviceCost}',service_count = '${serviceCount}'
+                        service_name = '${serviceName}',service_cost = '${serviceCost}',service_count = '${serviceCount}',
+                        date_rendering = '${formattedData}'
                         WHERE service_id = '${service_id}'
                 `)
                 if(data){
@@ -147,9 +149,18 @@ class Service_action {
                             contract_id:Number(id)
                         }
                     })
-                    return {message:'Услуга успешно отредактирована!',status:200}
+                    return {message:'Услуга успешно отредактирована!',status:200,
+                        data:{
+                        sum_left:checkSum(),
+                         date_renderind,
+                         service_cost:serviceCost,
+                         service_count:serviceCount,
+                         service_name:serviceName,
+                         id:service_id
+                    }}
                 }
             }catch (e) {
+                console.log(e)
                 return {
                     message:e,
                     status:500

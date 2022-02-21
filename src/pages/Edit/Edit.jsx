@@ -1,11 +1,14 @@
 import {useEffect,useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {useDispatch,useSelector} from "react-redux";
-import {actionsAddService,
+import {
+    actionsAddService,
     actionGetCurrentService,
     actionDeleteService,
     actionEditService
 } from "../../store/actions/actionsService";
+import {getDepartment} from "../../store/actions/actionsDepartment";
+import {getOrganization} from "../../store/actions/actionsOrganization";
 import Modal from "../../components/Modal/Modal";
 import FormService from "../../components/Form/FormService";
 import {CssBaseline,Grid,Paper,Box,Button,CircularProgress} from "@mui/material";
@@ -26,15 +29,20 @@ function Edit(){
     const serviceData = useSelector(state=>state.dashboard.editableService);
     const editContract = useSelector(state=>state.dashboard.editContract)
     const isLoading = useSelector(state=>state.dashboard.loading)
+    const department = useSelector(state=>state.department.department)
+    const organization = useSelector(state=>state.organization.organization)
     const params = useParams();
     const dispatch = useDispatch();
     useEffect(()=>{
+        if(!department.length || !organization.length){
+            dispatch(getDepartment())
+            dispatch(getOrganization())
+        }
         dispatch(actionGetCurrentService(params.id));
     },[]);
 
 
     const onSubmitForm=data=>{
-        console.log(data)
        if(open) {
 
            const editObject = {

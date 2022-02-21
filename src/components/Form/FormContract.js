@@ -160,7 +160,7 @@ function FormContract({editContract = {},editable = false}){
                     rules={{required:true}}
                     render={({field:{onChange,value}})=>(
                         <CustomAutoComplete
-                            value={value || organization.find(org=>org.label === editContract.organization)}
+                            value={value || organization.find(org=>org.label === editContract.organization) || editContract.organization}
                             options={organization}
                             onChange={onChange}
                         />
@@ -172,7 +172,7 @@ function FormContract({editContract = {},editable = false}){
                     rules={{required:true}}
                     render={({field:{onChange,value,ref}})=>(
                         <CustomAutoComplete
-                            value={value || department.find(dep=>dep.label === editContract.branch)}
+                            value={value || department.find(dep=>dep.label === editContract.branch) || editContract.branch}
                             onChange={onChange}
                             options={department}
                         />

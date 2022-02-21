@@ -25,6 +25,7 @@ const initialState = {
 }
 
 function reducer(state = initialState,action){
+    console.log(action.payload)
     switch (action.type) {
         case LOAD_DATA_DASHBOARD :
             return {
@@ -87,6 +88,10 @@ function reducer(state = initialState,action){
                     }
                     return item
                 }),
+                editContract:{
+                    ...state.editContract,
+                    sum_left:action.payload.data.sum_left
+                },
                 editableService: [...state.editableService,action.payload.data]
             }
         }
@@ -110,6 +115,10 @@ function reducer(state = initialState,action){
                 ...state,
                 error:'',
                 loading: false,
+                editContract: {
+                    ...state.editContract,
+                    sum_left: state.editContract.sum_left + action.payload.service_cost
+                },
                 editableService: state.editableService.filter(item=>item.service_id !== action.payload.service_id)
             }
         }
@@ -118,14 +127,18 @@ function reducer(state = initialState,action){
                 ...state,
                 error:'',
                 loading:false,
+                editContract: {
+                    ...state.editContract,
+                    sum_left:action.payload.data.sum_left
+                },
                 editableService: state.editableService.map(item=>{
-                    if(item.service_id === action.payload.service_id){
+                    if(item.service_id === Number(action.payload.data.id)){
                         return {
                             ...item,
-                            service_name:action.payload.service_name,
-                            service_cost:action.payload.service_cost,
-                            service_count:action.payload.service_count,
-                            service_left:action.payload.service_count
+                            service_name:action.payload.data.service_name,
+                            service_cost:action.payload.data.service_cost,
+                            service_count:action.payload.data.service_count,
+                            service_left:action.payload.data.service_count
                         }
                     }else{
                         return item

@@ -1,7 +1,7 @@
 import ruLocale from 'date-fns/locale/ru'
 import {LocalizationProvider,DatePicker} from "@mui/lab";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {TextField} from "@mui/material";
+import {TextField,Portal} from "@mui/material";
 
 
 
@@ -14,7 +14,9 @@ function CustomDatePicker({label,value,onChange}) {
                 onChange={onChange}
                 label={label}
                 value={value}
-                renderInput={(params)=><TextField {...params}/>}
+                renderInput={(params)=>(
+                        <TextField {...params}/>
+                )}
             />
         </LocalizationProvider>
     )

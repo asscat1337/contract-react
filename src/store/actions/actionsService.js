@@ -25,16 +25,16 @@ function actionGetCurrentService(id){
 }
 function actionDeleteService(obj){
     return dispatch=>{
-        const {agreement_id,service_id} = obj
+        const {agreement_id,service_id,service_cost} = obj
         axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/delete-service`,obj)
-            .then(()=>dispatch(deleteService({agreement_id,service_id})))
+            .then(()=>dispatch(deleteService({agreement_id,service_id,service_cost})))
             .catch(error=>dispatch(errorService(error)))
     }
 }
-function actionEditService(data){
+function actionEditService(edit){
     return dispatch=>{
-        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/update-service`,data)
-            .then(()=>dispatch(editService(data)))
+        axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/update-service`,edit)
+            .then(({data})=>dispatch(editService({id:edit.id,...data})))
             .catch(error=>dispatch(errorService(error)))
     }
 }

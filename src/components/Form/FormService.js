@@ -13,7 +13,7 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
     const [message,setMessage] = useState('')
     const [error,setError] = useState('')
     const [open,setOpen] = React.useState(false);
-    const editContract = useSelector(state=>state.dashboard.editContract.sum_left)
+    const editContract = useSelector(state=>state.dashboard.editContract)
 
     const schema = yup.object().shape({
         service_name:yup.string().required(),
@@ -31,19 +31,26 @@ function FormService({editable = false,editData = {},onSubmitForm,children}){
             setValue('service_name',editData.service_name);
             setValue('service_cost',editData.service_cost);
             setValue('service_count',editData.service_count)
+            setValue('date_rendering',editData.date_rendering)
         }
     },[editData]);
 
     const onSubmit=data=>{
-        if(data.service_cost > editContract){
-            setError('Сумма превышает стоимость контракта/договора')
+
+        if(data.service_cost > editContract.sum){
+            setError(`Сумма превышает стоимость контракта/договора`)
             setOpen(true)
-        }else{
+            return
+        }
+        if(data.service_cost > editContract.sum_left){
+            setError('Сумма превышает остаток контракта/договора')
+            setOpen(true)
+            return
+        }
             const isEditableData = editable ? ({id:editData.service_id,...data}) : (data);
             onSubmitForm(isEditableData);
             setMessage(editable ? 'Услуга отредактирована!' : 'Услуга добавлена!' );
             setOpen(true)
-        }
         if(!editable){
             reset({})
         }
@@ -68,11 +75,18 @@ return(
                     margin="normal"
                     {...register('service_name')}
                 />
-                <TextField
-                    fullWidth
-                    type="text"
-                    label="Стоимость"
-                    {...register('service_cost')}
+                <Controller
+                    control={control}
+                    name="service_cost"
+                    render={({field:{onChange,value}})=>(
+                        <TextField
+                            fullWidth
+                            type="text"
+                            label="Стоимость"
+                            value={value || ""}
+                            onChange={newValue=>onChange(newValue)}
+                        />
+                    )}
                 />
                 <TextField
                     fullWidth
@@ -85,12 +99,26 @@ return(
                     control={control}
                     name="date_rendering"
                     render={({field:{onChange,value}})=>(
-                        <CustomDatePicker
-                            value={value}
-                            label="Срок оказания"
-                            onChange={(newValue)=>onChange(newValue)}
-                        />
-                    )}
+                        <>
+                            {editable ? (
+                                <TextField
+                                    label="Дата заключения"
+                                    InputLabelProps={{ shrink: true, required: true }}
+                                    type="date"
+                                    value={value || ""}
+                                    onChange={(newValue)=>onChange(newValue)}
+                                />
+                            ):(
+                                <CustomDatePicker
+                                    value={value}
+                                    label="Срок оказания"
+                                    onChange={(newValue)=>onChange(newValue)}
+                                />
+                            )
+                            }
+                        </>
+                    )
+                    }
                 />
                 <Grid item>
                     {children}

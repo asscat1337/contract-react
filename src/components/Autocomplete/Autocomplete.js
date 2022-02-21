@@ -3,12 +3,10 @@ import React from "react";
 
 
 export default function CustomAutoComplete({options,onChange,value,defaultValue = ""}){
-    console.log(defaultValue)
     const filter = createFilterOptions()
     return(
         <Autocomplete
-            value={value}
-            defaultValue={defaultValue}
+            value={value || ""}
             options={options}
             onChange={(event,newValue)=>{
                 if(newValue && newValue.inputValue){
