@@ -171,7 +171,8 @@ function reducer(state = initialState,action){
                 ...state,
                 loading:true
             }
-        default : return state
+        default :
+            return state
     }
 }
 export const getDataDashboard = (payload)=>({type:GET_DATA_DASHBOARD,payload});

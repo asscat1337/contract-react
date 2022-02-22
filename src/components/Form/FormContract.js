@@ -39,9 +39,9 @@ function FormContract({editContract = {},editable = false}){
     const onSubmitForm=(data)=>{
        if(editable){
          if(data.sum < totalSumService){
-            setOpen(true)
-            setError("Сумма ниже!")
-             return false
+             setOpen(true)
+             setError("Сумма ниже!")
+             return
          }
        const transformedEdit =  {
             ...data,
@@ -57,7 +57,6 @@ function FormContract({editContract = {},editable = false}){
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
-           console.log(data)
            dispatch(actionAddDashboard(data));
            setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)
