@@ -79,11 +79,11 @@ function Dashboard() {
                },
                 {
                     Header:"Дата заключения",
-                    accessor: (d)=>dayjs(d.validity).format('YYYY-MM-DD')
+                    accessor: (d)=>dayjs(d.rendering).format('YYYY-MM-DD')
                 },
                 {
                     Header:"Дата окончания",
-                    accessor: (d)=>dayjs(d.rendering).format('YYYY-MM-DD')
+                    accessor: (d)=>dayjs(d.ended).format('YYYY-MM-DD')
                 },
                 {
                     Header:"Описание",

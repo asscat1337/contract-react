@@ -21,7 +21,7 @@ function FormContract({editContract = {},editable = false}){
          description: editable ? yup.string() : yup.string().required('Введите описание'),
          rendering: editable ? yup.date() : yup.date().required('Выберите дату начала'),
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
-          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
+        organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
          type:editable ? yup.string() : yup.string().required(),
         //
@@ -57,6 +57,7 @@ function FormContract({editContract = {},editable = false}){
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
+           console.log(data)
            dispatch(actionAddDashboard(data));
            setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)

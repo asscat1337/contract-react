@@ -37,14 +37,16 @@ class DashboardController {
 
     async addContract(req, res, next) {
         try {
-            const {department} = req.body
+            const {department,rendering,ended} = req.body
             const added = await Contract.create({
                 ...req.body,
                 branch:department,
+                rendering:dayjs(rendering).format('YYYY-MM-DD'),
+                ended:dayjs(ended).format('YYYY-MM-DD'),
                 date:dayjs().format('YYYY-MM-DD'),
                 sum_left:req.body.sum
             })
-                    return res.status(200).json(added)
+            return res.status(200).json(added)
         } catch (e) {
             if (e) {
                 res.status(500).send(e)
