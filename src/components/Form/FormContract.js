@@ -8,6 +8,7 @@ import {actionAddDashboard,actionEditContract} from "../../store/actions/actions
 import CustomSnackBar from "../Snackbar/SnackBar";
 import {UploadFile} from "@mui/icons-material";
 import CustomAutoComplete from "../Autocomplete/Autocomplete";
+import dayjs from "dayjs";
 
 
 function FormContract({editContract = {},editable = false}){
@@ -57,7 +58,10 @@ function FormContract({editContract = {},editable = false}){
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
-           dispatch(actionAddDashboard(data));
+           dispatch(actionAddDashboard({...data,
+               rendering:dayjs(data.rendering).format('YYYY-MM-DD'),
+               ended:dayjs(data.ended).format('YYYY-MM-DD')
+           }));
            setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)
            reset({activitiesbefore: ""})

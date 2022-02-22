@@ -41,8 +41,6 @@ class DashboardController {
             const added = await Contract.create({
                 ...req.body,
                 branch:department,
-                rendering:dayjs(rendering).format('YYYY-MM-DD'),
-                ended:dayjs(ended).format('YYYY-MM-DD'),
                 date:dayjs().format('YYYY-MM-DD'),
                 sum_left:req.body.sum
             })
