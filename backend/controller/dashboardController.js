@@ -198,13 +198,13 @@ class DashboardController {
     }
     async editContract(req,res,next){
         try {
-            const {id} = req.body;
+            const {id,type} = req.body;
             await Contract.update(req.body,{
                 where:{
                     contract_id:id
                 }
             })
-                .then(()=>res.status(200).send())
+                .then(()=>res.status(200).json({'message':`${type} успешно отредактирован`}))
         }catch (e) {
             return res.send(e).status(500)
         }

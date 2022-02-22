@@ -49,8 +49,8 @@ function FormContract({editContract = {},editable = false}){
             id:editContract.contract_id,
             organization:data.organization ?? editContract.organization,
             branch:data.department ?? editContract.branch,
-            ended:data.ended ?? editContract.ended,
-            rendering: data.rendering ?? editContract.rendering,
+            ended:dayjs(data.ended).format('YYYY-MM-DD') ?? editContract.ended,
+            rendering:dayjs(data.rendering).format('YYYY-MM-DD') ?? editContract.rendering,
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };

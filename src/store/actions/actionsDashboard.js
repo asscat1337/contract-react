@@ -82,10 +82,9 @@ function actionEditDataContract(current){
     }
 }
 function actionEditContract(data){
-    console.log(data)
     return dispatch=>{
         axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/edit-contract`,data)
-            .then(({data})=>dispatch(editDataContract(data)))
+            .then(()=>dispatch(editDataContract(data)))
             .catch(error=>dispatch(errorDashboard(error)))
     }
 }
