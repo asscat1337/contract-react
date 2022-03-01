@@ -199,6 +199,7 @@ class DashboardController {
     async editContract(req,res,next){
         try {
             const {id,type} = req.body;
+            console.log(req.body)
             await Contract.update(req.body,{
                 where:{
                     contract_id:id

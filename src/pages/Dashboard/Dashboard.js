@@ -70,7 +70,13 @@ function Dashboard() {
                     Header:"Сумма",
                     accessor: (d)=>d.sum,
                     Cell:({row})=>(
-                        <NumberFormat value={row.original.sum} displayType="text" prefix="₽" thousandSeparator/>
+                        <NumberFormat
+                            value={row.original.sum}
+                            displayType="text"
+                            prefix="₽"
+                            thousandSeparator
+
+                        />
                     )
                 },
                {

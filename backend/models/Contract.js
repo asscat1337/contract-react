@@ -17,11 +17,11 @@ const Contract = connection.define('contract',{
         allowNull:false
     },
     sum:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.FLOAT,
         allowNull:false
     },
     sum_left:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.FLOAT,
         allowNull:false
     },
     ended:{
