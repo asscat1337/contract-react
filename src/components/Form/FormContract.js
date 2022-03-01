@@ -49,11 +49,12 @@ function FormContract({editContract = {},editable = false}){
             id:editContract.contract_id,
             organization:data.organization ?? editContract.organization,
             branch:data.department ?? editContract.branch,
-            ended:dayjs(data.ended).format('YYYY-MM-DD') ?? editContract.ended,
-            rendering:dayjs(data.rendering).format('YYYY-MM-DD') ?? editContract.rendering,
+            ended:data.ended === undefined ? editContract.ended : dayjs(data.ended).format('YYYY-MM-DD'),
+            rendering:data.rendering === undefined ? editContract.rendering : dayjs(data.rendering).format('YYYY-MM-DD') ,
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };
+         console.log(transformedEdit)
          setMessage('Отредактировано!');
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
