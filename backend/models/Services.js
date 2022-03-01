@@ -17,7 +17,7 @@ const generateServices=(id)=>{
             allowNull: false
         },
         service_cost:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.FLOAT,
             allowNull:false
         },
         service_count:{
