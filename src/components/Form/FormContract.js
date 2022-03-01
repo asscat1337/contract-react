@@ -3,7 +3,7 @@ import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
-import {TextField,Button,Grid,Input,InputLabel,Paper} from "@mui/material";
+import {TextField,Button,Grid,Input,InputLabel,Paper,TextareaAutosize} from "@mui/material";
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
 import {UploadFile} from "@mui/icons-material";
@@ -22,9 +22,10 @@ function FormContract({editContract = {},editable = false}){
          description: editable ? yup.string() : yup.string().required('Введите описание'),
          rendering: editable ? yup.date() : yup.date().required('Выберите дату начала'),
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
-        organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
+         organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
          type:editable ? yup.string() : yup.string().required(),
+         notice:yup.string()
         //
 
     });
@@ -54,7 +55,6 @@ function FormContract({editContract = {},editable = false}){
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };
-         console.log(transformedEdit)
          setMessage('Отредактировано!');
           dispatch(actionEditContract(transformedEdit))
            setOpen(true)
@@ -185,6 +185,13 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                 />
+                 <TextareaAutosize
+                     maxRows={10}
+                     aria-label="Заметки"
+                     placeholder="Заметки"
+                     style={{ width: 200 }}
+                    {...register('notice')}
+                 />
                 </Grid>
                 <Grid item>
                     <h5>Выберите тип</h5>
