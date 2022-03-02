@@ -3,7 +3,7 @@ import {useForm,Controller} from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useSelector,useDispatch}  from "react-redux";
-import {TextField,Button,Grid,Input,InputLabel,Paper,TextareaAutosize} from "@mui/material";
+import {TextField,Button,Grid,Input,InputLabel,Paper,TextareaAutosize,FormGroup,Checkbox,FormControlLabel} from "@mui/material";
 import {actionAddDashboard,actionEditContract} from "../../store/actions/actionsDashboard";
 import CustomSnackBar from "../Snackbar/SnackBar";
 import {UploadFile} from "@mui/icons-material";
@@ -24,12 +24,14 @@ function FormContract({editContract = {},editable = false}){
          department:editable ? yup.string(): yup.string().required('Выберите отделение') ,
          organization:editable ? yup.string() : yup.string().required('Выберите организацию'),
          ended:editable ? yup.date() : yup.date().required('Выберите дату окончания'),
+         date_service: editable ? yup.date():yup.date().required(),
          type:editable ? yup.string() : yup.string().required(),
-         notice:yup.string()
+         notice:yup.string(),
+         isProlongation:yup.boolean()
         //
 
     });
-    const {register,handleSubmit,control,formState:{errors},reset,getValues,setValue} = useForm({
+    const {register,handleSubmit,control,formState:{errors},reset} = useForm({
         resolver:yupResolver(schema)
     });
     const dispatch = useDispatch();
@@ -51,7 +53,8 @@ function FormContract({editContract = {},editable = false}){
             organization:data.organization ?? editContract.organization,
             branch:data.department ?? editContract.branch,
             ended:data.ended === undefined ? editContract.ended : dayjs(data.ended).format('YYYY-MM-DD'),
-            rendering:data.rendering === undefined ? editContract.rendering : dayjs(data.rendering).format('YYYY-MM-DD') ,
+            rendering:data.rendering === undefined ? editContract.rendering : dayjs(data.rendering).format('YYYY-MM-DD'),
+            date_service:data.rendering === undefined ? editContract.date_service : dayjs(data.date_service).format('YYYY-MM-DD'),
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };
@@ -61,7 +64,8 @@ function FormContract({editContract = {},editable = false}){
        }else{
            dispatch(actionAddDashboard({...data,
                rendering:dayjs(data.rendering).format('YYYY-MM-DD'),
-               ended:dayjs(data.ended).format('YYYY-MM-DD')
+               ended:dayjs(data.ended).format('YYYY-MM-DD'),
+               date_service: dayjs(data.date_service).format('YYYY-MM-DD')
            }));
            setMessage(`${data.type} успешно добавлен!`);
            setOpen(true)
@@ -119,6 +123,22 @@ function FormContract({editContract = {},editable = false}){
                 </Grid>
 
                 <Grid item>
+                    <Controller
+                        control={control}
+                        name="date_service"
+                        render={({field:{onChange}})=>(
+                            <TextField
+                                id="date_service"
+                                type="date"
+                                label="Срок оказания услуг"
+                                onChange={date=>onChange(date)}
+                                defaultValue={editContract.date_servce|| ""}
+                                InputLabelProps={{
+                                    shrink:true
+                                }}
+                            />
+                        )}
+                    />
                     <TextField
                         fullWidth
                         id="number_contract"
@@ -185,11 +205,13 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                 />
-                 <TextareaAutosize
+                 <TextField
                      maxRows={10}
-                     aria-label="Заметки"
-                     placeholder="Заметки"
-                     style={{ width: 200 }}
+                     rows={3}
+                     multiline
+                     variant="outlined"
+                     margin="normal"
+                     label="Заметки"
                     {...register('notice')}
                  />
                 </Grid>
@@ -207,6 +229,14 @@ function FormContract({editContract = {},editable = false}){
                         />
                     )}
                   />
+                    <FormGroup>
+                        <FormControlLabel
+                            control={<Checkbox
+                                checked={editContract?.isProlongation}
+                                {...register('isProlongation')}
+                            />}
+                            label="Пролонгация" />
+                    </FormGroup>
                     <Controller
                         name="file"
                         control={control}

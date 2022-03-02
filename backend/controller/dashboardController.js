@@ -37,7 +37,7 @@ class DashboardController {
 
     async addContract(req, res, next) {
         try {
-            const {department,rendering,ended} = req.body
+            const {department} = req.body
             const added = await Contract.create({
                 ...req.body,
                 branch:department,

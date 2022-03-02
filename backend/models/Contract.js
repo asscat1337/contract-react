@@ -32,6 +32,9 @@ const Contract = connection.define('contract',{
         type:DataTypes.DATEONLY,
         allowNull:false
     },
+    date_service:{
+        type:DataTypes.DATEONLY,
+    },
     description:{
         type:DataTypes.TEXT,
         allowNull:false
@@ -53,6 +56,13 @@ const Contract = connection.define('contract',{
     },
     filename:{
         type:DataTypes.TEXT
+    },
+    notice:{
+        type:DataTypes.TEXT,
+    },
+    isProlongation:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
     }
 },{
     freezeTableName:true,

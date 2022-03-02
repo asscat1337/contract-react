@@ -91,6 +91,10 @@ function Dashboard() {
                     Header:"Дата окончания",
                     accessor: (d)=>dayjs(d.ended).format('YYYY-MM-DD')
                 },
+               {
+                   Header:"Срок оказания услуги",
+                   accessor:(d)=>d.date_service ?  dayjs(d.date_service).format('YYYY-MM-DD') : ""
+               },
                 {
                     Header:"Описание",
                     accessor: (d)=>d.description
@@ -121,6 +125,10 @@ function Dashboard() {
                           </Button>
                       ):"Нет"
                    )
+               },
+               {
+                    Header:'Пролонгация',
+                    accessor:d=>d.isProlongation ? "Да":"Нет"
                }
             ];
         if(roles === 2){
@@ -190,12 +198,12 @@ function Dashboard() {
                     fetchData={fetchData}
                     getRowProps={row=>({
                         style:{
-                            background:dayjs(row.original.ended).isBefore(dayjs(new Date())) ? red[300] : '',
+                            background:dayjs(row.original.ended).isBefore(dayjs(new Date())) && row.original.isProlongation === null || false || 0 ? red[300] : '',
                         }
                     })}
                     getCellProps={cell=>({
                         style: {
-                            color: dayjs(cell.row.original.ended).isBefore(dayjs(new Date())) ? red[50] : '',
+                            color: dayjs(cell.row.original.ended).isBefore(dayjs(new Date()))  && cell.row.original.isProlongation === null || false || 0 ? red[50] : '',
                         }
                     })}
                 />
