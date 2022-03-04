@@ -198,12 +198,14 @@ function Dashboard() {
                     fetchData={fetchData}
                     getRowProps={row=>({
                         style:{
-                            background:dayjs(row.original.ended).isBefore(dayjs(new Date())) && row.original.isProlongation === null || false || 0 ? red[300] : '',
+                            background:dayjs(row.original.ended).isBefore(dayjs(new Date()))
+                            && (row.original.isProlongation === 0 || row.original.isProlongation === null)  ? red[300] : '',
                         }
                     })}
                     getCellProps={cell=>({
                         style: {
-                            color: dayjs(cell.row.original.ended).isBefore(dayjs(new Date()))  && cell.row.original.isProlongation === null || false || 0 ? red[50] : '',
+                            color: dayjs(cell.row.original.ended).isBefore(dayjs(new Date()))
+                            && (cell.row.original.isProlongation === 0 || cell.row.original.isProlongation === null)  ? red[50] : '',
                         }
                     })}
                 />

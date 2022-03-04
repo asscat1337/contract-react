@@ -82,9 +82,17 @@ function actionEditDataContract(current){
     }
 }
 function actionEditContract(data){
+    const {file} = data
+    const formData = new FormData();
+    formData.append('file',file)
     return dispatch=>{
         axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/edit-contract`,data)
-            .then(()=>dispatch(editDataContract(data)))
+            .then(()=>{
+                dispatch(editDataContract(data))
+                if(file){
+                    axios.post(`${process.env.REACT_APP_BASE_URL}/dashboard/upload-file/${data.id}`,formData)
+                }
+            })
             .catch(error=>dispatch(errorDashboard(error)))
     }
 }

@@ -49,7 +49,7 @@ function FormContract({editContract = {},editable = false}){
          }
        const transformedEdit =  {
             ...data,
-            id:editContract.contract_id,
+            contract_id:editContract.contract_id,
             organization:data.organization ?? editContract.organization,
             branch:data.department ?? editContract.branch,
             ended:data.ended === undefined ? editContract.ended : dayjs(data.ended).format('YYYY-MM-DD'),
@@ -58,8 +58,9 @@ function FormContract({editContract = {},editable = false}){
             sum:data.sum ?? editContract.sum,
             type:data.type ?? editContract.type
         };
+         console.log(transformedEdit)
          setMessage('Отредактировано!');
-          dispatch(actionEditContract(transformedEdit))
+            dispatch(actionEditContract(transformedEdit))
            setOpen(true)
        }else{
            dispatch(actionAddDashboard({...data,
@@ -232,7 +233,7 @@ function FormContract({editContract = {},editable = false}){
                     <FormGroup>
                         <FormControlLabel
                             control={<Checkbox
-                                checked={editContract?.isProlongation}
+                                checked={editContract?.isProlongation === 1 ? true : false}
                                 {...register('isProlongation')}
                             />}
                             label="Пролонгация" />

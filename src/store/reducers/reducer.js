@@ -26,7 +26,7 @@ const initialState = {
 }
 
 function reducer(state = initialState,action){
-    console.log(action.payload)
+    console.log(action.payload?.rows?.map(item=>item.isProlongation === 0 || item.isProlongation === null))
     switch (action.type) {
         case LOAD_DATA_DASHBOARD :
             return {
@@ -159,8 +159,8 @@ function reducer(state = initialState,action){
                 data:state.data.map(item=>{
                     if(item.contract_id === action.payload.id){
                         return {
+                            ...action.payload,
                             contract_id:action.payload.id,
-                            ...action.payload
                         }
                     }else{
                         return item
