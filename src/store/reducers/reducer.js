@@ -14,6 +14,7 @@ import {
     UPLOAD_CONTRACT,
     GET_EDIT_CONTRACT,
     LOAD_SERVICE,
+    SEARCH_DATA
 } from "../types";
 
 const initialState = {
@@ -26,7 +27,6 @@ const initialState = {
 }
 
 function reducer(state = initialState,action){
-    console.log(action.payload?.rows?.map(item=>item.isProlongation === 0 || item.isProlongation === null))
     switch (action.type) {
         case LOAD_DATA_DASHBOARD :
             return {
@@ -172,6 +172,11 @@ function reducer(state = initialState,action){
                 ...state,
                 loading:true
             }
+        case SEARCH_DATA :
+            return {
+                ...state,
+                data:action.payload
+            }
         default :
             return state
     }
@@ -191,6 +196,7 @@ export const editContract=payload=>({type:GET_EDIT_CONTRACT,payload});
 export const addContractFromFile=(payload)=>({type:UPLOAD_CONTRACT,payload});
 export const editDataContract=(payload)=>({type:EDIT_CONTRACT,payload});
 export const loadService=()=>({type:LOAD_SERVICE})
+export const searchData=(payload)=>({type:SEARCH_DATA,payload})
 
 
 export default reducer

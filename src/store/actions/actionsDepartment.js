@@ -34,5 +34,5 @@ function actionsAddDepartment(data){
 export {
     getDepartment,
     actionsUploadDepartment,
-    actionsAddDepartment
+    actionsAddDepartment,
 }

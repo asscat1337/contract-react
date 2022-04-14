@@ -1,11 +1,12 @@
 import {useMemo} from 'react'
 import TextField from "@mui/material/TextField";
-function GlobalFilter({setFilter,filter}){
+function GlobalFilter({value,onChangeFilter}){
+
     return(
         <TextField
             fullWidth
-            value={filter || ""}
-            onChange={e=>setFilter(e.target.value.toString() || undefined)}
+            value={value || ""}
+            onChange={e=>onChangeFilter(e.target.value)}
             id="standard-basic"
             label="Поиск..."
             placeholder={`Поиск...`}

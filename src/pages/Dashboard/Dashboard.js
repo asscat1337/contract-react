@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState, useMemo} from 'react'
+import React, {useCallback, useRef, useState, useMemo, useEffect} from 'react'
 import Table from "../../components/Table/Table";
 import {SelectColumnFilter} from "../../components/Table/Filter";
 import dayjs from "dayjs";
@@ -6,7 +6,13 @@ import Info from "../../components/Info/Info";
 import AppContext from "../../hooks/context";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from 'react-router-dom'
-import {actionDeleteContract, actionGetDashboard,actionEditDataContract,downloadFile} from "../../store/actions/actionsDashboard";
+import {
+    actionDeleteContract,
+    actionGetDashboard,
+    actionEditDataContract,
+    downloadFile,
+    actionSearch
+} from "../../store/actions/actionsDashboard";
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
@@ -15,9 +21,12 @@ import {red} from "@material-ui/core/colors";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import NumberFormat from "react-number-format";
 import AlertDialog from "../../components/Modal/AlertDialog";
+import {useDebounce} from "../../hooks/useDebounce";
 
 function Dashboard() {
     const dispatch = useDispatch();
+    const [searchValue,setValue] = useState("")
+    const debounceSearch = useDebounce(searchValue,2000)
     const roles = useSelector((state)=>state.auth.user.role);
     const branch = useSelector((state)=>state.auth.user.branch);
     const data = useSelector((state)=>state.dashboard.data);
@@ -27,9 +36,15 @@ function Dashboard() {
     const fetchIdRef = useRef(0);
 
 
+
     const fetchAPIData = ({page,size})=>{
         dispatch(actionGetDashboard({page,size,branch,roles}));
     };
+
+    const fetchAPISearch = (searchData)=>{
+        dispatch(actionSearch(searchData))
+    }
+
     const fetchData = useCallback(({pageIndex,pageSize})=>{
         const fetchId = ++fetchIdRef.current;
         if(fetchIdRef.current === fetchId){
@@ -39,6 +54,11 @@ function Dashboard() {
             })
         }
     },[]);
+
+    const fetchSearchData = useCallback((searchData)=>{
+        fetchAPISearch(searchData)
+    })
+
     const onEditContract=(row)=>{
         dispatch(actionEditDataContract(row.original))
     }
@@ -196,6 +216,7 @@ function Dashboard() {
                     columns={columns}
                     data={data}
                     fetchData={fetchData}
+                    fetchSearchData={fetchSearchData}
                     getRowProps={row=>({
                         style:{
                             background:dayjs(row.original.ended).isBefore(dayjs(new Date()))

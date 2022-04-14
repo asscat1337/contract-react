@@ -261,6 +261,37 @@ class DashboardController {
         }
     }
 
+    async search(req,res,next){
+        try{
+           const {params} = req.query
+            const noLink = ({link,...rest})=>rest
+            const toNumber = Number(params)
+            const searchResult = {
+                description:params,
+                organization:params,
+            }
+            const checkNumber = isNaN(toNumber) ? searchResult : {
+               ...searchResult,
+                sum:params
+            }
+            const findSearch = await Contract.findAll({
+                where: {
+                    [Op.or]: checkNumber
+                },
+                raw:true
+            })
+            const deleteLink = findSearch.map(item=>{
+                return noLink(item)
+            })
+          return res.status(200).json(deleteLink)
+        }catch (e) {
+            console.log(e)
+            return res.status(500).json({
+                message:'Произошла ошибка при поиске'
+            })
+        }
+    }
+
 }
 
 

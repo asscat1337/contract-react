@@ -7,7 +7,8 @@ import {
     getDataService,
     loadDataDashboard,
     editContract,
-    editDataContract
+    editDataContract,
+    searchData
 } from "../reducers/reducer";
 
 function actionGetDashboard({page,size,branch,roles}) {
@@ -106,6 +107,14 @@ function actionAddContractFromFile(data){
     }
 }
 
+function actionSearch(query){
+    console.log(query)
+    return dispatch=>{
+        axios.get(`${process.env.REACT_APP_BASE_URL}/dashboard/query?params=${query}`)
+            .then(({data})=>dispatch(searchData(data)))
+            .catch(error=>console.log(error))
+    }
+}
 
 export {
     actionGetDashboard,
@@ -115,5 +124,6 @@ export {
     actionEditDataContract,
     actionEditContract,
     actionAddContractFromFile,
-    downloadFile
+    downloadFile,
+    actionSearch
 }

@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import {composeWithDevTools} from 'redux-devtools-extension'
 import {persistStore,persistReducer} from "redux-persist";
 import sessionStorage from "redux-persist/lib/storage/session";
+import localStorage from "redux-persist/es/storage";
 import reducer from "./reducers/reducer";
 import patientReducer from "./reducers/patientReducer";
 import organizationReducer from "./reducers/organizationReducer";
@@ -14,7 +15,7 @@ import typeReducer from "./reducers/typeReducer";
 
 const persistConfig = {
     key:'root',
-    storage:sessionStorage,
+    storage:localStorage,
 }
 
 

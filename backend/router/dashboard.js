@@ -23,6 +23,7 @@ router.get('/get-branch',async (req,res)=>{
             return res.json(mappedDepartment)
         })
 })
+router.get('/query',dashboardController.search)
 router.get('/download-file/:id',dashboardController.downloadFile)
 router.post('/upload-file',multer({storage: storageConfig}).single('file'),dashboardController.uploadFile)
 router.post('/add-department',dashboardController.addDepartment)
