@@ -267,12 +267,18 @@ class DashboardController {
             const noLink = ({link,...rest})=>rest
             const toNumber = Number(params)
             const searchResult = {
-                description:params,
-                organization:params,
+                description:{
+                    [Op.like]:`%${params}%`
+                },
+                organization:{
+                    [Op.like]:`%${params}%`
+                },
             }
             const checkNumber = isNaN(toNumber) ? searchResult : {
                ...searchResult,
-                sum:params
+                sum:{
+                   [Op.like]:`%${params}%`
+                }
             }
             const findSearch = await Contract.findAll({
                 where: {
